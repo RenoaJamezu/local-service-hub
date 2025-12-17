@@ -5,6 +5,7 @@ import morgan from "morgan";
 import testRoutes from "./routes/test.route";
 import authRoutes from "./routes/auth.route";
 import serviceRoutes from "./routes/service.route";
+import bookingRoutes from "./routes/booking.route";
 import { errorHandler } from "./middleware/error.middleware";
 
 dotenv.config();
@@ -23,5 +24,6 @@ app.get("/", (req, res) => {
 app.use("/api/test", testRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 export default app;
