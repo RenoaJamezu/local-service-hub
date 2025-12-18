@@ -61,3 +61,16 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     return next(error);
   };
 };
+
+export async function getMe(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = (req as any).userId;
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) throw new AppError("User not found", 404);
+
+    return res.status(200).json(user);
+  } catch (error) {
+    return next(error);
+  };
+};

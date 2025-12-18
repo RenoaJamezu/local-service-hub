@@ -30,5 +30,5 @@ export function protect(req: Request, res: Response, next: NextFunction) {
     return next();
   } catch (error) {
     return next(error);
-  }
+  };
 };
