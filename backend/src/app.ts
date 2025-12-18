@@ -15,7 +15,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(errorHandler);
 
 // routes
 app.get("/", (req, res) => {
@@ -25,5 +24,7 @@ app.use("/api/test", testRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/bookings", bookingRoutes);
+
+app.use(errorHandler);
 
 export default app;
