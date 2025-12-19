@@ -6,7 +6,8 @@ import { AppError } from "../utils/app.error";
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
   try {
-    const { name, email, password } = req.body as {
+    const { role, name, email, password } = req.body as {
+      role: string,
       name: string,
       email: string,
       password: string,
@@ -18,6 +19,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
     if (existing) throw new AppError("Email already exists", 409);
 
     await User.create({
+      role,
       name,
       email,
       password,
