@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import Navbar from "../components/Navbar";
+import Button from "../components/ui/Button";
 
 function Index() {
   const { token, logout, user } = useAuth();
@@ -12,6 +14,7 @@ function Index() {
   };
   return (
     <>
+      <Navbar />
       <div className="flex gap-10 p-10 items-center">
         <Link to="/login" className="px-3 py-2 border rounded-lg items-center justify-center bg-primary">
           Login
@@ -34,6 +37,10 @@ function Index() {
         <span>{user?.name}</span>
         <span>{user?.email}</span>
         <span>{user?.role}</span>
+
+        <Button>
+          click me
+        </Button>
       </div>
     </>
   )
