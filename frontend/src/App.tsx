@@ -7,8 +7,13 @@ import Signup from "./pages/auth/Signup";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import RoleRoute from "./components/RoleRoute";
 import UserDashboard from "./pages/user/Dashboard";
+import UserRequests from "./pages/user/Requests";
 import ProviderDashboard from "./pages/provider/Dashboard";
+import ProviderServices from "./pages/provider/Services";
+import ProviderBookings from "./pages/provider/Bookings";
 import NotFound from "./pages/NotFound";
+import ProviderLayout from "./pages/provider/ProviderLayout";
+import UserLayout from "./pages/user/UserLayout";
 
 function App() {
 
@@ -24,12 +29,19 @@ function App() {
           <Route element={<ProtectedRoute />} >
             {/* user routes */}
             <Route element={<RoleRoute role="user" />}>
-              <Route path="/user/dashboard" element={<UserDashboard />}/>
+              <Route path="/user" element={<UserLayout />}>
+                <Route path="dashboard" element={<UserDashboard />}/>
+                <Route path="requests" element={<UserRequests />}/>
+              </Route>
             </Route>
 
             {/* provider routes */}
             <Route element={<RoleRoute role="provider" />}>
-              <Route path="/provider/dashboard" element={<ProviderDashboard />}/>
+              <Route path="/provider" element={<ProviderLayout />}>
+                <Route path="dashboard" element={<ProviderDashboard />}/>
+                <Route path="services" element={<ProviderServices />}/>
+                <Route path="bookings" element={<ProviderBookings />}/>
+              </Route>
             </Route>
           </Route>
 

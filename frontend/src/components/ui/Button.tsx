@@ -2,7 +2,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "../../utils/cn";
 
 type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
-  variant?: "default" | "outline";
+  variant?: "default" | "outline" | "ghost";
   type?: "button" | "submit" | "reset";
 };
 
@@ -14,8 +14,9 @@ const buttonVariants = cva("px-4 py-2 rounded-lg",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft hover:shadow-elevated active:scale-[0.98]",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow",
         outline: "border-2 border-muted-foreground",
+        ghost: "hover:bg-secondary",
       }
     },
     defaultVariants: {

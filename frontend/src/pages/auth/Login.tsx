@@ -36,7 +36,11 @@ function Login() {
 
       login(token);
 
-      nav("/");
+      if (res.data.role === "user") {
+        nav("/user/dashboard");
+      } else {
+        nav("/provider/dashboard");
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response.data.message || "Login failed");

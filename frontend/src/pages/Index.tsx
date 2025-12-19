@@ -1,48 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import Navbar from "../components/Navbar";
-import Button from "../components/ui/Button";
+import Navbar from "../components/Navbar"
 
 function Index() {
-  const { token, logout, user } = useAuth();
-
-  const nav = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    nav(0);
-  };
   return (
-    <>
+    <main>
       <Navbar />
-      <div className="flex gap-10 p-10 items-center">
-        <Link to="/login" className="px-3 py-2 border rounded-lg items-center justify-center bg-primary">
-          Login
-        </Link>
-        <Link to="/signup" className="px-3 py-2 border rounded-lg items-center justify-center bg-primary-foreground">
-          Signup
-        </Link>
-        <Link to="/user/dashboard" className="px-3 py-2 border rounded-lg items-center justify-center bg-secondary">
-          User
-        </Link>
-        <Link to="/provider/dashboard" className="px-3 py-2 border rounded-lg items-center justify-center bg-secondary-foreground">
-          Provider
-        </Link>
-        {token &&
-          <button onClick={handleLogout} className="px-3 py-2 border rounded-lg items-center justify-center">
-            Logout
-          </button>
-        }
-        <span>{user?._id}</span>
-        <span>{user?.name}</span>
-        <span>{user?.email}</span>
-        <span>{user?.role}</span>
-
-        <Button>
-          click me
-        </Button>
-      </div>
-    </>
+    </main>
   )
 }
 
