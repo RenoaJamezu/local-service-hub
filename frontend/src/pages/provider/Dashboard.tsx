@@ -1,25 +1,86 @@
 import { MdOutlineDashboard } from "react-icons/md";
 import { useAuth } from "../../hooks/useAuth"
-import { HiOutlineClock, HiOutlineWrench } from "react-icons/hi2";
-import { IoCheckmarkCircleOutline, IoCloseCircleOutline } from "react-icons/io5";
-import Button from "../../components/ui/Button";
+import { HiOutlineClock } from "react-icons/hi2";
+import { IoCheckmarkCircleOutline, IoCloseCircleOutline, IoStopCircleOutline } from "react-icons/io5";
+import { useBooking } from "../../hooks/useBooking";
+import { useEffect, useState } from "react";
+import StatsCard from "../../components/ui/StatsCard";
+import BookingCard from "../../components/ui/BookingCard";
+import ConfirmModal from "../../components/ui/ConfirmModal";
+
+type BookingItem = {
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  service: {
+    _id: string;
+    title: string;
+    price: number;
+  };
+  provider: string;
+  status: "pending" | "accepted" | "rejected" | "cancelled";
+  message: string;
+  createdAt: string;
+};
 
 function Dashboard() {
   const { user } = useAuth();
+  const { stats, bookings, loading, fetchStats, fetchBookings, acceptBooking, rejectBooking } = useBooking();
 
-  const stats = [
-    { id: "pending", label: "Pending", total: 2, icon: <HiOutlineClock />, color: "accent" },
-    { id: "accepted", label: "Accepted", total: 1, icon: <IoCheckmarkCircleOutline />, color: "success" },
-    { id: "rejected", label: "Rejected", total: 1, icon: <IoCloseCircleOutline />, color: "destructive" },
+  const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
+  const [acceptModal, setAcceptModal] = useState(false);
+  const [rejectModal, setRejectModal] = useState(false);
+
+  const pendingBookings = bookings.filter((b) => b.status === "pending");
+
+  useEffect(() => {
+    fetchStats();
+    fetchBookings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const statsData = [
+    {
+      label: "Pending",
+      count: stats?.pending as number,
+      color: "accent" as const,
+      icon: <HiOutlineClock />,
+    },
+    {
+      label: "Accepted",
+      count: stats?.accepted as number,
+      color: "primary" as const,
+      icon: <IoCheckmarkCircleOutline />,
+    },
+    {
+      label: "Rejected",
+      count: stats?.rejected as number,
+      color: "destructive" as const,
+      icon: <IoCloseCircleOutline />,
+    },
+    {
+      label: "Cancelled",
+      count: stats?.cancelled as number,
+      color: "muted-foreground" as const,
+      icon: <IoStopCircleOutline />,
+    },
   ];
 
-  const services = [
-    { id: 1, label: "Plumbing Repair", price: 500, name: "Maria Santos", email: "maria@example.com", message: "I have a leaky faucet in my kitchen that needs urgent repair.", status: "pending", date: "Dec 19" },
-    { id: 2, label: "Plumbing Repair", price: 500, name: "Jose Reyes", email: "jose@example.com", message: "Bathroom sink is clogged.", status: "pending", date: "Dec 19" },
-  ];
+  const handleAccept = (_id: string) => {
+    acceptBooking(_id);
+    setAcceptModal(false);
+  };
+
+  const handleReject = (_id: string) => {
+    rejectBooking(_id);
+    setRejectModal(false);
+  };
 
   return (
-    <main className="mb-10">
+    <main>
       {/* header */}
       <div className="flex justify-between items-center mb-10">
         <div>
@@ -33,59 +94,86 @@ function Dashboard() {
       </div>
 
       {/* stats */}
-      <div className="grid sm:grid-cols-3 gap-3 mb-10">
-        {stats.map((stat) => (
-          <div className={`flex items-center gap-3 px-3 py-4 border rounded-lg shadow bg-${stat.color}/5 border-${stat.color}/20`}>
-            <span className={`text-4xl rounded-lg p-2 text-${stat.color} bg-${stat.color}/25`}>{stat.icon}</span>
-            <div className="flex flex-col font-medium">
-              <span className="text-2xl">{stat.total}</span>
-              <span className="text-xl text-muted-foreground">{stat.label}</span>
-            </div>
-          </div>
-        ))}
+      <div className="grid sm:grid-cols-4 gap-3 mb-10">
+        {loading ? (
+          <>
+            {statsData.map((item) => (
+              <div
+                key={item.label}
+                className={`flex items-center gap-3 px-3 py-4 rounded-lg shadow h-24 bg-${item.color}/10 animate-pulse`}>
+              </div>
+            ))}
+          </>
+        ) : (
+          <>
+            {statsData.map((item) => (
+              <StatsCard
+                key={item.label}
+                icon={item.icon}
+                count={item.count}
+                label={item.label}
+                color={item.color}
+              />
+            ))}
+          </>
+        )}
       </div>
 
       {/* pending requests */}
-      <h2 className="text-2xl font-medium mb-3">Pending Requests</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {services.map((service) => (
-          <div className="border rounded-lg p-5 flex flex-col">
-            <div className="flex gap-3 items-center mb-3">
-              <div className="bg-primary/25 rounded-lg p-2">
-                <HiOutlineWrench className="text-3xl text-primary" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-medium">{service.label}</span>
-                <span className="text-muted-foreground">₱{service.price}</span>
-              </div>
-            </div>
-
-            <span className="text-muted-foreground">{service.name}</span>
-            <span className="text-muted-foreground mb-3">{service.email}</span>
-
-            <div className="bg-muted rounded-lg p-3 mb-3">
-              <span className="text-muted-foreground">{service.message}</span>
-            </div>
-
-            <span className="text-muted-foreground mb-3">Requested on {service.date}</span>
-
-            <div className="grid sm:grid-cols-2 gap-3">
-              <Button
-                variant="default"
-                className="bg-primary hover:bg-primary/50 w-full text-white font-medium"
-              >
-                Accept
-              </Button>
-              <Button
-                variant="destructive"
-                className="w-full text-white font-medium"
-              >
-                Reject
-              </Button>
-            </div>
-          </div>
-        ))}
+      <div className="flex items-center mb-5 gap-2">
+        <div className="w-2.5 h-2.5 rounded-full bg-accent"></div>
+        <h2 className="text-2xl font-medium">Pending Requests</h2>
       </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {pendingBookings.length === 0 ? (
+          <>
+            <span>No bookings</span>
+          </>
+        ) : (
+          <>
+            {pendingBookings.map((item) => (
+              <BookingCard
+                key={item._id}
+                booking={item}
+                onAccept={() => {
+                  setSelectedBooking(item);
+                  setAcceptModal(true);
+                }}
+                onReject={() => {
+                  setSelectedBooking(item);
+                  setRejectModal(true);
+                }}
+              />
+            ))}
+          </>
+        )}
+      </div>
+
+      {/* confirm modals */}
+      <ConfirmModal
+        isOpen={acceptModal}
+        title="Accept Booking"
+        message={`Are you sure you want to accept ${selectedBooking?.service.title} from ${selectedBooking?.user.name}?`}
+        confirmText="Accept"
+        onCancel={() => setAcceptModal(false)}
+        onConfirm={() => {
+          if (selectedBooking)
+            handleAccept(selectedBooking?._id);
+        }}
+      />
+      
+      <ConfirmModal
+        isOpen={rejectModal}
+        title="Reject Booking"
+        message={`Are you sure you want to reject ${selectedBooking?.service.title} from ${selectedBooking?.user.name}?`}
+        confirmText="Reject"
+        variant="destructive"
+        onCancel={() => setRejectModal(false)}
+        onConfirm={() => {
+          if (selectedBooking)
+            handleReject(selectedBooking?._id);
+        }}
+      />
     </main>
   )
 }

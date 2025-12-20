@@ -107,24 +107,32 @@ function Services() {
           </>
         ) : (
           <>
-            {services.map((item) => (
-              <MyServicesCard
-                key={item._id}
-                service={item}
-                onToggle={() => {
-                  setSelectedService(item);
-                  setToggleModal(true);
-                }}
-                onEdit={() => {
-                  setSelectedService(item);
-                  setServiceFormModal(true);
-                }}
-                onDelete={() => {
-                  setSelectedService(item);
-                  setDeleteModal(true);
-                }}
-              />
-            ))}
+            {services.length === 0 ? (
+              <>
+                <span>No services provided</span>
+              </>
+            ) : (
+              <>
+                {services.map((item) => (
+                  <MyServicesCard
+                    key={item._id}
+                    service={item}
+                    onToggle={() => {
+                      setSelectedService(item);
+                      setToggleModal(true);
+                    }}
+                    onEdit={() => {
+                      setSelectedService(item);
+                      setServiceFormModal(true);
+                    }}
+                    onDelete={() => {
+                      setSelectedService(item);
+                      setDeleteModal(true);
+                    }}
+                  />
+                ))}
+              </>
+            )}
           </>
         )}
       </div>

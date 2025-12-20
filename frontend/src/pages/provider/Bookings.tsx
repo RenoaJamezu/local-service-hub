@@ -1,6 +1,85 @@
-import { IoCalendarClearOutline } from "react-icons/io5"
+import { IoCalendarClearOutline, IoFunnelOutline } from "react-icons/io5"
+import { useBooking } from "../../hooks/useBooking";
+import Button from "../../components/ui/Button";
+import { useEffect, useState } from "react";
+import BookingCard from "../../components/ui/BookingCard";
+import ConfirmModal from "../../components/ui/ConfirmModal";
+
+type BookingItem = {
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  service: {
+    _id: string;
+    title: string;
+    price: number;
+  };
+  provider: string;
+  status: "pending" | "accepted" | "rejected" | "cancelled";
+  message: string;
+  createdAt: string;
+};
 
 function Bookings() {
+  const { stats, bookings, fetchStats, fetchBookings, acceptBooking, rejectBooking } = useBooking();
+
+  const [activeTab, setActiveTab] = useState("all");
+  const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
+  const [acceptModal, setAcceptModal] = useState(false);
+  const [rejectModal, setRejectModal] = useState(false);
+
+  const pendingBookings = bookings.filter((b) => b.status === "pending");
+  const acceptedBookings = bookings.filter((b) => b.status === "accepted");
+  const rejectedBookings = bookings.filter((b) => b.status === "rejected");
+  const cancelledBookings = bookings.filter((b) => b.status === "cancelled");
+
+  useEffect(() => {
+    fetchStats();
+    fetchBookings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const statsTabs = [
+    {
+      id: "all",
+      label: "All",
+      count: stats?.total as number,
+    },
+    {
+      id: "pending",
+      label: "Pending",
+      count: stats?.pending as number,
+    },
+    {
+      id: "accepted",
+      label: "Accepted",
+      count: stats?.accepted as number,
+    },
+    {
+      id: "rejected",
+      label: "Rejected",
+      count: stats?.rejected as number,
+    },
+    {
+      id: "cancelled",
+      label: "Cancelled",
+      count: stats?.cancelled as number,
+    },
+  ];
+
+  const handleAccept = (_id: string) => {
+    acceptBooking(_id);
+    setAcceptModal(false);
+  };
+
+  const handleReject = (_id: string) => {
+    rejectBooking(_id);
+    setRejectModal(false);
+  };
+
   return (
     <main>
       {/* header */}
@@ -14,6 +93,161 @@ function Bookings() {
           <span className="text-muted-foreground text-xl">View and manage all your booking requests</span>
         </div>
       </div>
+
+      {/* all bookings */}
+      {/* filter */}
+      <div className="flex items-center gap-2 mb-5">
+        <IoFunnelOutline className="text-xl text-muted-foreground" />
+        {statsTabs.map((item) => (
+          <Button
+            key={item.id}
+            onClick={() => setActiveTab(item.id)}
+            variant={activeTab === item.id
+              ? "default"
+              : "ghost"
+            }
+          >
+            {item.label} <span className="text-muted-foreground font-medium">({item.count})</span>
+          </Button>
+        ))}
+      </div>
+
+      {/* diplay bookings */}
+      {activeTab === "all" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {bookings.length === 0 ? (
+          <>
+            <span>No bookings</span>
+          </>
+        ) : (
+          <>
+            {bookings.map((item) => (
+              <BookingCard
+                key={item._id}
+                booking={item}
+                onAccept={item.status === "pending" ? () => {
+                  setSelectedBooking(item);
+                  setAcceptModal(true);
+                } : undefined}
+                onReject={item.status === "pending" ? () => {
+                  setSelectedBooking(item);
+                  setRejectModal(true);
+                } : undefined}
+                showActions={item.status === "pending"}
+              />
+            ))}
+          </>
+        )}
+      </div>
+      )}
+
+      {activeTab === "pending" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {pendingBookings.length === 0 ? (
+          <>
+            <span>No bookings</span>
+          </>
+        ) : (
+          <>
+            {pendingBookings.map((item) => (
+              <BookingCard
+                key={item._id}
+                booking={item}
+                onAccept={() => {
+                  setSelectedBooking(item);
+                  setAcceptModal(true);
+                }}
+                onReject={() => {
+                  setSelectedBooking(item);
+                  setRejectModal(true);
+                }}
+              />
+            ))}
+          </>
+        )}
+      </div>
+      )}
+
+      {activeTab === "accepted" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {acceptedBookings.length === 0 ? (
+          <>
+            <span>No bookings</span>
+          </>
+        ) : (
+          <>
+            {acceptedBookings.map((item) => (
+              <BookingCard
+                key={item._id}
+                booking={item}
+                showActions={false}
+              />
+            ))}
+          </>
+        )}
+      </div>
+      )}
+
+      {activeTab === "rejected" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {rejectedBookings.length === 0 ? (
+          <>
+            <span>No bookings</span>
+          </>
+        ) : (
+          <>
+            {rejectedBookings.map((item) => (
+              <BookingCard
+                key={item._id}
+                booking={item}
+                showActions={false}
+              />
+            ))}
+          </>
+        )}
+      </div>
+      )}
+
+      {activeTab === "cancelled" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {cancelledBookings.length === 0 ? (
+          <>
+            <span>No bookings</span>
+          </>
+        ) : (
+          <>
+            {cancelledBookings.map((item) => (
+              <BookingCard
+                key={item._id}
+                booking={item}
+                showActions={false}
+              />
+            ))}
+          </>
+        )}
+      </div>
+      )}
+
+      {/* confirm modals */}
+      <ConfirmModal
+        isOpen={acceptModal}
+        title="Accept Booking"
+        message={`Are you sure you want to accept ${selectedBooking?.service.title} from ${selectedBooking?.user.name}?`}
+        confirmText="Accept"
+        onCancel={() => setAcceptModal(false)}
+        onConfirm={() => {
+          if (selectedBooking)
+            handleAccept(selectedBooking?._id);
+        }}
+      />
+
+      <ConfirmModal
+        isOpen={rejectModal}
+        title="Reject Booking"
+        message={`Are you sure you want to reject ${selectedBooking?.service.title} from ${selectedBooking?.user.name}?`}
+        confirmText="Reject"
+        variant="destructive"
+        onCancel={() => setRejectModal(false)}
+        onConfirm={() => {
+          if (selectedBooking)
+            handleReject(selectedBooking?._id);
+        }}
+      />
     </main>
   )
 }
