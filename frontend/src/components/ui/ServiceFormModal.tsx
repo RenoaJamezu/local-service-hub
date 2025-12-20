@@ -1,22 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import Button from "./Button";
 import toast from "react-hot-toast";
 import api from "../../api/axios";
 import { useService } from "../../hooks/useService";
 
-interface ServiceFormProps {
+interface ServiceFormModalProps {
+  service?: {
+    _id: string;
+    title: string;
+    description: string;
+    price: number;
+    category: string;
+  };
   isOpen: boolean;
   onClose: () => void;
-}
+};
 
-export default function ServiceForm({ isOpen, onClose }: ServiceFormProps) {
+export default function ServiceFormModal({ service, isOpen, onClose }: ServiceFormModalProps) {
   const { fetchServices } = useService();
+  
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const isEdit = Boolean(service);
+
+  useEffect(() => {
+    if (service) {
+      setTitle(service.title);
+      setCategory(service.category);
+      setPrice(String(service.price));
+      setDescription(service.description);
+    } else {
+      setTitle("");
+      setCategory("");
+      setPrice("");
+      setDescription("");
+    };
+  }, [service])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,14 +53,25 @@ export default function ServiceForm({ isOpen, onClose }: ServiceFormProps) {
     };
 
     try {
-      await api.post("/api/services", {
-        title,
-        category,
-        price: Number(price),
-        description,
-      });
+      if (isEdit) {
+        await api.put(`/api/services/${service?._id}/update-details`, {
+          title,
+          category,
+          price: Number(price),
+          description,
+        })
 
-      toast.success("Service Created");
+        toast.success("Service Updated");
+      } else {
+        await api.post("/api/services", {
+          title,
+          category,
+          price: Number(price),
+          description,
+        });
+
+        toast.success("Service Created");
+      }
       fetchServices();
       handleClose();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -139,7 +174,7 @@ export default function ServiceForm({ isOpen, onClose }: ServiceFormProps) {
               type="submit"
               className="w-full"
             >
-              {loading ? "Creating..." : "Create Service"}
+              {loading ? (isEdit ? "Saving..." : "Creating...") : (isEdit ? "Update Service" : "Create Service")}
             </Button>
           </div>
         </form>

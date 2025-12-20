@@ -8,11 +8,11 @@ import Button from "../../components/ui/Button";
 import { IoLogInOutline } from "react-icons/io5";
 
 function Login() {
+  const { login } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const { login } = useAuth();
 
   const nav = useNavigate();
 

@@ -71,14 +71,14 @@ function Dashboard() {
 
             <div className="grid sm:grid-cols-2 gap-3">
               <Button
-                variant="active"
+                variant="default"
                 className="bg-primary hover:bg-primary/50 w-full text-white font-medium"
               >
                 Accept
               </Button>
               <Button
                 variant="destructive"
-                className="bg-destructive hover:bg-destructive/50 w-full text-white font-medium"
+                className="w-full text-white font-medium"
               >
                 Reject
               </Button>

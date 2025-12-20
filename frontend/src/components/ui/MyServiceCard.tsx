@@ -1,43 +1,27 @@
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import Button from "./Button";
-import api from "../../api/axios";
-import { useService } from "../../hooks/useService";
-import toast from "react-hot-toast";
 
 interface MyServiceCardProps {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  status: "active" | "inactive" | "deleted";
-  provider: {
+  service: {
     _id: string;
-    name: string;
-    email: string;
+    title: string;
+    description: string;
+    price: number;
+    category: string;
+    status: "active" | "inactive" | "deleted";
+    provider: {
+      _id: string;
+      name: string;
+      email: string;
+    };
+    createdAt: string;
   };
-  createdAt: string;
+  onToggle: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 };
 
-export default function MyServiceCard({ service }: { service: MyServiceCardProps; onEdit?: () => void }) {
-  const { fetchServices } = useService();
-
-  const toggleServiceStatus = async () => {
-    try {
-      const updateStatus = service.status === "active" ? "inactive" : "active";
-
-      await api.put(`/api/services/${service._id}/update-status`, {
-        status: updateStatus,
-      });
-
-      toast.success("Service status updated");
-      fetchServices();
-    } catch (error) {
-      toast.error("Failed to update service status");
-      console.log(error);
-    };
-  };
-
+export default function MyServiceCard({ service, onToggle, onEdit, onDelete }: MyServiceCardProps) {
   return (
     <div className={`flex flex-col shadow rounded-lg p-5 bg-white ${service.status === "inactive" && "opacity-50"}`}>
       <div className="flex justify-between">
@@ -49,7 +33,7 @@ export default function MyServiceCard({ service }: { service: MyServiceCardProps
           <Button
             variant="outline"
             className="font-medium text-sm"
-            onClick={toggleServiceStatus}
+            onClick={onToggle}
           >
             {service.status === "active" ? "Deactivate" : "Activate"}
           </Button>
@@ -57,12 +41,14 @@ export default function MyServiceCard({ service }: { service: MyServiceCardProps
             <Button
               variant="ghost"
               className="py-3 text-xl"
+              onClick={onEdit}
             >
               <MdOutlineEdit />
             </Button>
             <Button
               variant="destructive"
-              className="py-3 text-xl"
+              className="py-3 text-xl shadow-none text-black bg-white hover:bg-destructive/25"
+              onClick={onDelete}
             >
               <MdDeleteOutline />
             </Button>
