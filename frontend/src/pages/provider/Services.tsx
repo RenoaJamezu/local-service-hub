@@ -25,7 +25,7 @@ type ServiceItem = {
 };
 
 function Services() {
-  const { services, fetchServices } = useService();
+  const { services, loading, fetchServices } = useService();
 
   const [serviceFormModal, setServiceFormModal] = useState(false);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
@@ -34,7 +34,7 @@ function Services() {
 
   useEffect(() => {
     fetchServices();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleServiceStatus = async () => {
@@ -95,24 +95,38 @@ function Services() {
 
       {/* provider services card */}
       <div className="space-y-5">
-        {services.map((item) => (
-          <MyServicesCard
-            key={item._id}
-            service={item}
-            onToggle={() => {
-              setSelectedService(item);
-              setToggleModal(true);
-            }}
-            onEdit={() => {
-              setSelectedService(item);
-              setServiceFormModal(true);
-            }}
-            onDelete={() => {
-              setSelectedService(item);
-              setDeleteModal(true);
-            }}
-          />
-        ))}
+        {loading ? (
+          <>
+            {services.map(() => (
+              <div className="flex flex-col h-36 shadow rounded-lg p-5 bg-white animate-pulse">
+                <div className="h-10 w-2/6 bg-gray-300 mb-3"></div>
+                <div className="h-8 w-1/6 bg-gray-300 mb-3"></div>
+                <div className="h-8 w-2/7 bg-gray-300"></div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <>
+            {services.map((item) => (
+              <MyServicesCard
+                key={item._id}
+                service={item}
+                onToggle={() => {
+                  setSelectedService(item);
+                  setToggleModal(true);
+                }}
+                onEdit={() => {
+                  setSelectedService(item);
+                  setServiceFormModal(true);
+                }}
+                onDelete={() => {
+                  setSelectedService(item);
+                  setDeleteModal(true);
+                }}
+              />
+            ))}
+          </>
+        )}
       </div>
 
       {/* service form modal */}

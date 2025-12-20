@@ -23,7 +23,7 @@ interface MyServiceCardProps {
 
 export default function MyServiceCard({ service, onToggle, onEdit, onDelete }: MyServiceCardProps) {
   return (
-    <div className={`flex flex-col shadow rounded-lg p-5 bg-white ${service.status === "inactive" && "opacity-50"}`}>
+    <div className={`flex flex-col h-36 shadow rounded-lg p-5 bg-white ${service.status === "inactive" && "opacity-50"}`}>
       <div className="flex justify-between">
         <div className="flex items-center gap-3 mb-3">
           <h2 className="text-2xl font-medium">{service.title}</h2>
