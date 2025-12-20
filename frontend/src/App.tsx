@@ -14,37 +14,45 @@ import ProviderBookings from "./pages/provider/Bookings";
 import NotFound from "./pages/NotFound";
 import ProviderLayout from "./pages/provider/ProviderLayout";
 import UserLayout from "./pages/user/UserLayout";
+import { useAuth } from "./hooks/useAuth";
+import Spinner from "./components/Spinner";
 
 function App() {
+  const { loading } = useAuth();
+
+  if (loading) return <Spinner />;
 
   return (
     <>
       <Toaster />
       <Router>
         <Routes>
+          {/* public routes */}
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
+          {/* protected routes */}
           <Route element={<ProtectedRoute />} >
             {/* user routes */}
             <Route element={<RoleRoute role="user" />}>
               <Route path="/user" element={<UserLayout />}>
-                <Route path="dashboard" element={<UserDashboard />}/>
-                <Route path="requests" element={<UserRequests />}/>
+                <Route path="dashboard" element={<UserDashboard />} />
+                <Route path="requests" element={<UserRequests />} />
               </Route>
             </Route>
 
             {/* provider routes */}
             <Route element={<RoleRoute role="provider" />}>
               <Route path="/provider" element={<ProviderLayout />}>
-                <Route path="dashboard" element={<ProviderDashboard />}/>
-                <Route path="services" element={<ProviderServices />}/>
-                <Route path="bookings" element={<ProviderBookings />}/>
+                <Route path="dashboard" element={<ProviderDashboard />} />
+                <Route path="services" element={<ProviderServices />} />
+                <Route path="bookings" element={<ProviderBookings />} />
               </Route>
             </Route>
           </Route>
 
+          {/* no routes */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

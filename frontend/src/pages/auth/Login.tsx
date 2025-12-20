@@ -35,12 +35,8 @@ function Login() {
       const token = res.data.token;
 
       login(token);
-
-      if (res.data.role === "user") {
-        nav("/user/dashboard");
-      } else {
-        nav("/provider/dashboard");
-      };
+      toast.success("Logged in");
+      nav("/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response.data.message || "Login failed");
@@ -56,9 +52,11 @@ function Login() {
         className="bg-white p-6 rounded-lg shadow-md w-full max-w-md text-center"
       >
         <div className="flex flex-col items-center text-center mb-5">
-          <div className="bg-linear-to-br from-primary to-muted-foreground p-3 rounded-lg">
+          <Link
+            to="/"
+            className="bg-linear-to-br from-primary to-muted-foreground p-3 rounded-lg">
             <AiOutlineHome className="text-3xl text-white" />
-          </div>
+          </Link>
           <h1 className="text-2xl font-medium text-center mb-2">Welcome back</h1>
           <span className="text-muted-foreground">Sign in to your LocalServiceHub account</span>
         </div>
@@ -94,7 +92,10 @@ function Login() {
           className="w-full mb-4"
         >
           {loading ? (
-            "Signing in..."
+            <span className="flex items-center gap-2 justify-center text-xl">
+              <IoLogInOutline className="text-2xl" />
+              Signing in...
+            </span>
           ) : (
             <span className="flex items-center gap-2 justify-center text-xl">
               <IoLogInOutline className="text-2xl" />

@@ -12,6 +12,7 @@ interface User{
 interface AuthContextType {
   token: string | null;
   user: User | null;
+  loading: boolean;
   login: (token: string) => void;
   logout: () => void;
 };
@@ -23,35 +24,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.getItem("token")
   );
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const login = (token: string) => {
     localStorage.setItem("token", token);
     setToken(token);
   };
 
-  // todo after logout should refresh the page
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
+    setUser(null);
+    
   };
 
   useEffect(() => {
     async function fetchUser() {
-      if (!token) return;
+      if (!token) {
+        setLoading(false);
+        return;
+      };
   
       try {
         const res = await api.get("/api/auth/me");
         setUser(res.data);
       } catch {
         logout();
-      };
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchUser();
   }, [token]);
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

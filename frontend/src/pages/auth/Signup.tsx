@@ -63,12 +63,8 @@ function Signup() {
       const token = loginRes.data.token;
 
       login(token);
-
-      if (loginRes.data.role === "user") {
-        nav("/user/dashboard");
-      } else {
-        nav("/provider/dashboard");
-      };
+      toast.success("Account Created Successfully");
+      nav("/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response.data.message)
@@ -89,9 +85,11 @@ function Signup() {
         className="bg-white p-6 rounded-lg shadow-md w-full max-w-md text-center"
       >
         <div className="flex flex-col items-center text-center mb-5">
-          <div className="bg-linear-to-br from-primary to-muted-foreground p-3 rounded-lg">
+          <Link
+            to="/"
+            className="bg-linear-to-br from-primary to-muted-foreground p-3 rounded-lg">
             <AiOutlineHome className="text-3xl text-white" />
-          </div>
+          </Link>
           <h1 className="text-2xl font-medium text-center mb-2">Create an account</h1>
           <span className="text-muted-foreground">Join LocalServiceHub today</span>
         </div>
@@ -176,7 +174,10 @@ function Signup() {
           className="w-full mb-4"
         >
           {loading ? (
-            "Creating account..."
+            <span className="flex items-center gap-2 justify-center text-xl">
+              <AiOutlineUserAdd />
+              Creating accound...
+            </span>
           ) : (
             <span className="flex items-center gap-2 justify-center text-xl">
               <AiOutlineUserAdd />

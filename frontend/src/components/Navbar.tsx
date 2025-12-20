@@ -6,12 +6,11 @@ import { IoCalendarClearOutline, IoLogOutOutline } from "react-icons/io5";
 import { NavLink, useNavigate } from "react-router-dom";
 import { MdOutlineDashboard } from "react-icons/md";
 import { HiOutlineWrench } from "react-icons/hi2";
+import toast from "react-hot-toast";
 
 function Navbar() {
   const { user, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
-  const [activeProviderTab, setActiveProviderTab] = useState("dashboard");
-  const [activeUserTab, setActiveUserTab] = useState("dashboard");
 
   const nav = useNavigate();
 
@@ -23,19 +22,20 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
+    toast.success("Logout successfully");
     logout();
-    nav(0);
+    nav("/");
   };
 
   const userTabs = [
-    { id: "dashboard", label: "Dashboard", icon: <MdOutlineDashboard /> },
-    { id: "requests", label: "My Requests", icon: <IoCalendarClearOutline /> },
+    { to: "/user/dashboard", label: "Dashboard", icon: <MdOutlineDashboard /> },
+    { to: "/user/requests", label: "My Requests", icon: <IoCalendarClearOutline /> },
   ];
 
   const providerTabs = [
-    { id: "dashboard", label: "Dashboard", icon: <MdOutlineDashboard /> },
-    { id: "bookings", label: "Bookings", icon: <IoCalendarClearOutline /> },
-    { id: "services", label: "My Services", icon: <HiOutlineWrench /> },
+    { to: "/provider/dashboard", label: "Dashboard", icon: <MdOutlineDashboard /> },
+    { to: "/provider/bookings", label: "Bookings", icon: <IoCalendarClearOutline /> },
+    { to: "/provider/services", label: "My Services", icon: <HiOutlineWrench /> },
   ];
 
   return (
@@ -56,26 +56,18 @@ function Navbar() {
         {user?.role === "user" && (
           <>
             <div className="flex gap-3">
-              {userTabs.map((user) => (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  key={user.id}
-                  onClick={() => setActiveUserTab(user.id)}
-                >
-                  <NavLink
-                    to={`/user/${user.id}`}
-                    className={`flex items-center text-lg gap-2 
-                      ${activeUserTab === user.id
-                        ? "text-primary border-primary bg-primary/5"
-                        : "text-gray-500 hover:text-black/80"}`}
-                  >
-                    <span className="text-2xl">
-                      {user.icon}
-                    </span>
-                    {user.label}
-                  </NavLink>
-                </Button>
+              {userTabs.map(({ to, label, icon }) => (
+                <NavLink key={to} to={to}>
+                  {({ isActive }) => (
+                    <Button
+                      variant={isActive ? "active" : "ghost"}
+                      className="flex items-center gap-2"
+                    >
+                      <span className="text-2xl">{icon}</span>
+                      {label}
+                    </Button>
+                  )}
+                </NavLink>
               ))}
             </div>
           </>
@@ -83,26 +75,20 @@ function Navbar() {
         {user?.role === "provider" && (
           <>
             <div className="flex gap-3">
-              {providerTabs.map((provider) => (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  key={provider.id}
-                  onClick={() => setActiveProviderTab(provider.id)}
-                >
-                  <NavLink
-                    to={`/provider/${provider.id}`}
-                    className={`flex items-center text-lg gap-2 
-                      ${activeProviderTab === provider.id
-                        ? "text-primary border-primary bg-primary/5"
-                        : "text-gray-500 hover:text-black/80"}`}
-                  >
-                    <span className="text-2xl">
-                      {provider.icon}
-                    </span>
-                    {provider.label}
-                  </NavLink>
-                </Button>
+              {providerTabs.map(({ to, label, icon }) => (
+                <NavLink key={to} to={to}>
+                  {({ isActive }) => (
+                    <Button
+                      variant={isActive ? "active" : "ghost"}
+                      className="flex items-center gap-2"
+                    >
+                      <span className="text-2xl">
+                        {icon}
+                      </span>
+                      {label}
+                    </Button>
+                  )}
+                </NavLink>
               ))}
             </div>
           </>
