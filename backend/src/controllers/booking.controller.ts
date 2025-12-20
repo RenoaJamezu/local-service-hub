@@ -65,12 +65,13 @@ export async function getProviderBookings(req: Request, res: Response, next: Nex
 
     const bookings = await Booking.find(query)
       .populate("user", "name email")
-      .populate("service", "title price");
+      .populate("service", "title price")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json(bookings);
   } catch (error) {
     return next(error);
-  }
+  };
 };
 
 export async function updateBookingStatus(req: Request, res: Response, next: NextFunction) {
@@ -87,7 +88,7 @@ export async function updateBookingStatus(req: Request, res: Response, next: Nex
     // find the booking
     const booking = await Booking.findById(bookingId);
     if (!booking) throw new AppError("Booking not found", 404);
-    
+
     // only pending book can be updated
     if (booking?.status !== "pending") throw new AppError("Cant update this status", 400);
 

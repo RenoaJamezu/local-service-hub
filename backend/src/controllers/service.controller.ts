@@ -44,7 +44,8 @@ export async function getServices(req: Request, res: Response, next: NextFunctio
     };
 
     const services = await Service.find(filter)
-      .populate("provider", "name email");
+      .populate("provider", "name email")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json(services);
   } catch (error) {
