@@ -6,12 +6,7 @@ import { AppError } from "../utils/app.error";
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
   try {
-    const { role, name, email, password } = req.body as {
-      role: string,
-      name: string,
-      email: string,
-      password: string,
-    };
+    const { role, name, email, password } = req.body;
 
     if (!name || !email || !password) throw new AppError("All fields are required!", 400);
 
@@ -33,10 +28,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {
-    const { email, password } = req.body as {
-      email: string,
-      password: string,
-    };
+    const { email, password } = req.body;
 
     if (!email || !password) throw new AppError("All fields are required!", 400);
 
@@ -50,7 +42,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     if (!secret) throw new AppError("JWT secret not configured", 500);
 
     const token = jwt.sign(
-      { userId: String(user._id) },
+      { userId: String(user._id), role: user.role },
       secret,
       { expiresIn: "24h" },
     );

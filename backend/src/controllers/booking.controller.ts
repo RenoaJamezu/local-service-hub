@@ -7,10 +7,7 @@ export async function createBooking(req: Request, res: Response, next: NextFunct
   try {
     // extract the required data from request body and the userId
     const userId = (req as any).userId;
-    const { serviceId, message } = req.body as {
-      serviceId: string,
-      message: string,
-    };
+    const { serviceId, message } = req.body;
 
     // booking must be linked to an existing service
     if (!serviceId) throw new AppError("Service ID is required", 400);
@@ -21,8 +18,8 @@ export async function createBooking(req: Request, res: Response, next: NextFunct
 
     // checks if user already has an active booking for this service
     const existingBooking = await Booking.findOne({
-      user: userId as String,
-      service: serviceId as String,
+      user: userId,
+      service: serviceId,
       status: {
         $in: ["pending", "accepted"]
       },
@@ -90,6 +87,7 @@ export async function updateBookingStatus(req: Request, res: Response, next: Nex
     // find the booking
     const booking = await Booking.findById(bookingId);
     if (!booking) throw new AppError("Booking not found", 404);
+    
     // only pending book can be updated
     if (booking?.status !== "pending") throw new AppError("Cant update this status", 400);
 

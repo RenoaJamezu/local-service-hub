@@ -4,6 +4,7 @@ import { AppError } from "../utils/app.error";
 
 interface JwtPayload {
   userId: string;
+  role: "user" | "provider";
 };
 
 export function protect(req: Request, res: Response, next: NextFunction) {
@@ -23,9 +24,10 @@ export function protect(req: Request, res: Response, next: NextFunction) {
     const decoded = jwt.verify(
       token,
       secret,
-    ) as JwtPayload;
+    ) as JwtPayload & { role: "user" | "provider" };
 
     (req as any).userId = decoded.userId;
+    (req as any).role = decoded.role;
 
     return next();
   } catch (error) {
