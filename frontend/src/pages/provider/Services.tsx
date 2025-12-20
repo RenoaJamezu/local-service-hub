@@ -68,7 +68,7 @@ function Services() {
   };
 
   return (
-    <main className="mb-10">
+    <main>
       {/* header */}
       <div className="flex gap-3 items-center text-primary mb-3">
         <HiOutlineWrench className="text-3xl" />
