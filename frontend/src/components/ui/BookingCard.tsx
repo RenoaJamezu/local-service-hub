@@ -72,7 +72,7 @@ export default function BookingCard({
           <div className="bg-primary/25 rounded-lg p-2">
             <HiOutlineWrench className="text-2xl sm:text-3xl text-primary" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col justify-center">
             <h1 className="text-sm sm:text-md font-medium line-clamp-1 mr-3">{booking.service.title}</h1>
             <p className="text-xs sm:text-sm text-muted-foreground">₱{booking.service.price}</p>
           </div>
