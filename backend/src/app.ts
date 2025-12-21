@@ -12,7 +12,9 @@ dotenv.config();
 const app = express();
 
 // middleware
-app.use(cors());
+app.use(cors(
+  {origin: process.env["FRONTEND_URL"]}
+));
 app.use(express.json());
 app.use(morgan("dev"));
 
