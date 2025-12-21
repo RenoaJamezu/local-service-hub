@@ -10,12 +10,12 @@ export default function NoData({
   message,
 }: NoDataProps) {
   return (
-    <div className="flex flex-col w-full items-center justify-center mt-10">
-      <div className="bg-muted rounded-lg p-5 mb-3 text-3xl text-muted-foreground">
+    <div className="flex flex-col w-full items-center justify-center mt-10 px-4 text-center">
+      <div className="bg-muted rounded-lg p-4 sm:p-5 mb-3 text-2xl sm:text-3xl text-muted-foreground">
         {icon}
       </div>
-      <p className="font-medium text-xl mb-3 w-1/3 text-center">{title}</p>
-      <p className="text-muted-foreground mb-5 w-1/3 text-center">{message}</p>
+      <p className="font-medium text-lg sm:text-xl mb-2 sm:mb-3 max-w-xl">{title}</p>
+      <p className="text-muted-foreground text-sm sm:text-base mb-4 sm:mb-5 max-w-2xl">{message}</p>
     </div>
   )
 }

@@ -42,10 +42,10 @@ export default function StatsCard({
   }
 
   return (
-    <div className={`w-full flex items-center gap-3 px-3 py-4 rounded-lg shadow h-20 sm:h-24 ${styles.container}`}>
-      <span className={`text-3xl sm:text-4xl rounded-lg p-2 ${styles.iconBg}`}>{icon}</span>
+    <div className={`w-full flex items-center gap-3 px-3 py-4 rounded-lg shadow h-16 sm:h-24 ${styles.container}`}>
+      <span className={`text-xl sm:text-4xl rounded-lg p-2 ${styles.iconBg}`}>{icon}</span>
       <div className="flex flex-col">
-        <p className="text-lg sm:text-xl">{count}</p>
+        <p className="text-md sm:text-xl font-medium">{count}</p>
         <p className="text-xs sm:text-sm md:text-base text-muted-foreground">{label}</p>
       </div>
     </div>
