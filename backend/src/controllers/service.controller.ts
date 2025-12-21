@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../utils/app.error";
 import Service from "../models/service.model";
+import Booking from "../models/booking.model";
 
 export async function createService(req: Request, res: Response, next: NextFunction) {
   try {
@@ -38,6 +39,15 @@ export async function getServices(req: Request, res: Response, next: NextFunctio
 
     if (userRole === "user") {
       filter.status = { $in: ["active"] };
+      
+      // Get services with active bookings by this user
+      const activeBookings = await Booking.find({
+        user: userId,
+        status: { $in: ["pending", "accepted"] }
+      }).select("service");
+      
+      const bookedServiceIds = activeBookings.map(b => b.service);
+      filter._id = { $nin: bookedServiceIds };
     } else if (userRole === "provider") {
       filter.status = { $in: ["active", "inactive"] };
       filter.provider = userId;
