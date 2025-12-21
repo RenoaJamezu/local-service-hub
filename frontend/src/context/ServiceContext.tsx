@@ -21,7 +21,12 @@ interface ServiceContextType {
   services: Service[];
   loading: boolean;
   fetchServices: () => Promise<void>;
-  createService: (data: Omit<Service, "_id" | "provider" | "createdAt" | "status">) => Promise<void>;
+  createService: (data: {
+    title: string;
+    description: string;
+    price: number;
+    category: string;
+  }) => Promise<void>;
   updateService: (
     _id: string,
     data: Partial<{

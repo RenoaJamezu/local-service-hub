@@ -3,7 +3,7 @@ import { AiOutlineHome } from "react-icons/ai";
 import { useAuth } from "../hooks/useAuth";
 import Button from "./ui/Button";
 import { IoCalendarClearOutline, IoLogOutOutline } from "react-icons/io5";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { MdOutlineDashboard } from "react-icons/md";
 import { HiOutlineWrench, HiOutlineEllipsisVertical, HiOutlineXMark } from "react-icons/hi2";
 import toast from "react-hot-toast";
@@ -68,9 +68,11 @@ function Navbar() {
       }`}>
       {/* logo */}
       <div className="flex items-center gap-2 sm:gap-3">
-        <div className="bg-linear-to-br from-primary to-primary/90 p-1.5 sm:p-2 rounded-lg">
+        <Link
+          to="/"
+          className="bg-linear-to-br from-primary to-primary/90 p-1.5 sm:p-2 rounded-lg">
           <AiOutlineHome className="text-2xl sm:text-3xl text-white" />
-        </div>
+        </Link>
         <h1 className="font-medium text-sm sm:text-lg md:text-2xl">LocalService<span className="text-primary">Hub</span></h1>
       </div>
 

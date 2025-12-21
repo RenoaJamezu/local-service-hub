@@ -21,7 +21,11 @@ type BookingItem = {
     title: string;
     price: number;
   };
-  provider: string;
+  provider: {
+    _id: string;
+    name: string;
+    email: string;
+  };
   status: "pending" | "accepted" | "rejected" | "cancelled";
   message: string;
   createdAt: string;
@@ -36,11 +40,6 @@ function Dashboard() {
   const [rejectModal, setRejectModal] = useState(false);
 
   const pendingBookings = bookings.filter((b) => b.status === "pending");
-
-  useEffect(() => {
-    refresh();
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
 
   const statsData = [
     {
@@ -78,6 +77,11 @@ function Dashboard() {
     await rejectBooking(_id);
     if (!loading) setRejectModal(false);
   };
+
+  useEffect(() => {
+    refresh();
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   return (
     <main className="px-4 sm:px-6 md:px-10">

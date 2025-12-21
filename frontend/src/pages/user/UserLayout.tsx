@@ -6,7 +6,7 @@ function UserLayout() {
     <>
       <Navbar />
 
-      <div className="md:pt-30 px-4 md:px-10 w-full min-h-screen">
+      <div className="pt-24 md:pt-30 pb-10 w-full min-h-screen bg-secondary">
         <Outlet />
       </div>
     </>

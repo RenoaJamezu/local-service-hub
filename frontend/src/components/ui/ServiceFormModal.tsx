@@ -69,8 +69,7 @@ export default function ServiceFormModal({
         await createService({
           title,
           category,
-          price:
-            Number(price),
+          price: Number(price),
           description
         });
         toast.success("Service Created");

@@ -14,7 +14,11 @@ interface Booking {
     title: string;
     price: number;
   };
-  provider: string;
+  provider: {
+    _id: string;
+    name: string;
+    email: string;
+  };
   status: "pending" | "accepted" | "rejected" | "cancelled";
   message: string;
   createdAt: string;
@@ -35,6 +39,11 @@ interface BookingContextType {
   refresh: () => Promise<void>;
   acceptBooking: (_id: string) => Promise<void>;
   rejectBooking: (_id: string) => Promise<void>;
+  cancelBooking: (_id: string) => Promise<void>;
+  createBooking: (data: {
+    serviceId: string,
+    message: string,
+  }) => Promise<void>;
 };
 
 const BookingContext = createContext<BookingContextType | null>(null);
@@ -89,6 +98,35 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
     };
   };
 
+  const cancelBooking = async (id: string) => {
+    setLoading(true);
+    try {
+      await api.cancelBooking(id);
+      toast.success("Booking cancelled");
+    } catch {
+      toast.error("Failed to cancel");
+    } finally {
+      await refresh();
+      setLoading(false);
+    };
+  };
+
+  const createBooking = async (data: {
+    serviceId: string;
+    message: string;
+  }) => {
+    setLoading(true);
+    try {
+      await api.createBooking(data);
+      toast.success("Booking requested succesfully");
+    } catch {
+      toast.error("Failed to request service");
+    } finally {
+      await refresh();
+      setLoading(false);
+    };
+  };
+
   return (
     <BookingContext.Provider
       value={{
@@ -98,6 +136,8 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
         refresh,
         acceptBooking,
         rejectBooking,
+        cancelBooking,
+        createBooking,
       }}
     >
       {children}

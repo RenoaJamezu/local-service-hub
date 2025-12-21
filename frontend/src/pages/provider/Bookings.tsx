@@ -18,7 +18,11 @@ type BookingItem = {
     title: string;
     price: number;
   };
-  provider: string;
+  provider: {
+    _id: string;
+    name: string;
+    email: string;
+  };
   status: "pending" | "accepted" | "rejected" | "cancelled";
   message: string;
   createdAt: string;
