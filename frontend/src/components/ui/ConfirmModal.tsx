@@ -1,6 +1,6 @@
 import Button from "./Button";
 
-type buttonVariant = "default" | "outline" | "ghost" | "active" | "destructive"
+type buttonVariant = "default" | "outline" | "active" | "destructive"
 
 interface ConfirmModalProps {
   isOpen: boolean;

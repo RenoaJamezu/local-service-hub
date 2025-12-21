@@ -105,7 +105,7 @@ function Bookings() {
             onClick={() => setActiveTab(item.id)}
             variant={activeTab === item.id
               ? "default"
-              : "ghost"
+              : "outline"
             }
           >
             {item.label} <p className="text-muted-foreground font-medium">({item.count})</p>

@@ -50,7 +50,7 @@ export default function MyServiceCard({ service, onToggle, onEdit, onDelete }: M
           </Button>
           <div>
             <Button
-              variant="ghost"
+              variant="outline"
               className="py-3 text-xl"
               onClick={onEdit}
             >

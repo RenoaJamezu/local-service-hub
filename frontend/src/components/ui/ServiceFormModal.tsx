@@ -102,7 +102,7 @@ export default function ServiceFormModal({ service, isOpen, onClose }: ServiceFo
           <h1 className="font-medium text-xl">{isEdit ? "Edit Service" : "Create New Service"}</h1>
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             onClick={onClose}
             className="py-3"
           >
