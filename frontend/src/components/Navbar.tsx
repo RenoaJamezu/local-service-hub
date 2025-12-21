@@ -45,10 +45,10 @@ function Navbar() {
       }`}>
       {/* start */}
       <div className="flex items-center gap-3">
-        <div className="bg-linear-to-br from-primary to-muted-foreground p-2 rounded-lg">
+        <div className="bg-linear-to-br from-primary to-primary/90 p-2 rounded-lg">
           <AiOutlineHome className="md:text-3xl text-white" />
         </div>
-        <span className="font-medium md:text-2xl">LocalService<span className="text-primary">Hub</span></span>
+        <h1 className="font-medium md:text-2xl">LocalService<span className="text-primary">Hub</span></h1>
       </div>
 
       {/* middle desktop view*/}
@@ -60,7 +60,7 @@ function Navbar() {
                 <NavLink key={to} to={to}>
                   {({ isActive }) => (
                     <Button
-                      variant={isActive ? "active" : "ghost"}
+                      variant={isActive ? "active" : "outline"}
                       className="flex items-center gap-2"
                     >
                       <span className="text-2xl">{icon}</span>
@@ -79,7 +79,7 @@ function Navbar() {
                 <NavLink key={to} to={to}>
                   {({ isActive }) => (
                     <Button
-                      variant={isActive ? "active" : "ghost"}
+                      variant={isActive ? "active" : "outline"}
                       className="flex items-center gap-2"
                     >
                       <span className="text-2xl">
@@ -100,9 +100,9 @@ function Navbar() {
         {user ? (
           <>
             <div className="flex items-center gap-3">
-              <span className="text-muted-foreground">Hi, <span className="text-black">{user?.name}</span></span>
+              <p className="text-muted-foreground">Hi, <span className="text-black">{user?.name}</span></p>
               <Button
-                variant="ghost"
+                variant="outline"
                 className="flex items-center gap-1"
                 onClick={handleLogout}
               >
@@ -115,7 +115,7 @@ function Navbar() {
           <>
             <div className="flex items-center gap-3">
               <Button
-                variant="ghost"
+                variant="outline"
                 className="font-medium"
                 onClick={() => nav("/login")}
               >

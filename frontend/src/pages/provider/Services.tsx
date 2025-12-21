@@ -56,12 +56,12 @@ function Services() {
       {/* header */}
       <div className="flex gap-3 items-center text-primary mb-3">
         <HiOutlineWrench className="text-3xl" />
-        <span className="font-medium text-lg">All Services</span>
+        <h1 className="font-medium text-lg">All Services</h1>
       </div>
       <div className="flex justify-between items-center mb-10">
         <div>
           <h1 className="text-3xl font-medium mb-2">My Services</h1>
-          <span className="text-muted-foreground text-xl">Manage your service offerings</span>
+          <p className="text-muted-foreground text-xl">Manage your service offerings</p>
         </div>
         <div>
           <Button

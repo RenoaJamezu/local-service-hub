@@ -41,7 +41,7 @@ export default function BookingCard({ booking, onAccept, onReject, showActions =
   };
 
   if (loading) return (
-    <div className="outline outline-muted-foreground/50 bg-white rounded-lg p-5 flex flex-col h-72 animate-pulse fade-slide-in">
+    <div className="bg-white rounded-lg p-5 flex flex-col h-72 animate-pulse fade-slide-in">
       <div className="flex gap-2 mb-3">
         <div className="bg-primary/25 rounded-lg p-2">
           <HiOutlineWrench className="text-3xl text-primary" />
@@ -69,37 +69,37 @@ export default function BookingCard({ booking, onAccept, onReject, showActions =
             <HiOutlineWrench className="text-3xl text-primary" />
           </div>
           <div className="flex flex-col">
-            <span className="text-md font-medium line-clamp-1 mr-3">{booking.service.title}</span>
-            <span className="text-sm text-muted-foreground">₱{booking.service.price}</span>
+            <h1 className="text-md font-medium line-clamp-1 mr-3">{booking.service.title}</h1>
+            <p className="text-sm text-muted-foreground">₱{booking.service.price}</p>
           </div>
         </div>
-        <span className={`flex items-center gap-1 text-xs px-3 py-1 rounded-full font-medium border ${statusStyles[booking.status]}`}>
+        <p className={`flex items-center gap-1 text-xs px-3 py-1 rounded-full font-medium border ${statusStyles[booking.status]}`}>
           <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
           {capitalize(booking.status)}
-        </span>
+        </p>
       </div>
 
-      <span className="text-sm text-muted-foreground flex items-center gap-1">
+      <p className="text-sm text-muted-foreground flex items-center gap-1">
         <AiOutlineUser />
         {booking.user.name}
-      </span>
-      <span className="text-sm text-muted-foreground mb-3 flex items-center gap-1">
+      </p>
+      <p className="text-sm text-muted-foreground mb-3 flex items-center gap-1">
         <MdOutlineEmail />
         {booking.user.email}
-      </span>
+      </p>
 
       {booking.message && (
         <div className="bg-muted rounded-lg p-2 mb-3">
-          <span className="text-sm text-muted-foreground line-clamp-1 flex items-center gap-1">
+          <p className="text-sm text-muted-foreground line-clamp-1 flex items-center gap-1">
             <MdOutlineMessage />
             {booking.message}
-          </span>
+          </p>
         </div>
       )}
 
-      <span className="text-xs text-muted-foreground mt-auto">
+      <p className="text-xs text-muted-foreground mt-auto">
         Requested on {formattedDate}
-      </span>
+      </p>
 
       {showActions && (
         <div className="grid sm:grid-cols-2 gap-3 mt-3">

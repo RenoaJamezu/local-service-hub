@@ -87,10 +87,10 @@ function Bookings() {
         <div>
           <div className="flex gap-3 items-center text-primary mb-3">
             <IoCalendarClearOutline className="text-3xl" />
-            <span className="font-medium text-lg">All Bookings</span>
+            <h1 className="font-medium text-lg">All Bookings</h1>
           </div>
           <h1 className="text-3xl font-medium mb-2">Booking History</h1>
-          <span className="text-muted-foreground text-xl">View and manage all your booking requests</span>
+          <p className="text-muted-foreground text-xl">View and manage all your booking requests</p>
         </div>
       </div>
 
@@ -108,7 +108,7 @@ function Bookings() {
               : "ghost"
             }
           >
-            {item.label} <span className="text-muted-foreground font-medium">({item.count})</span>
+            {item.label} <p className="text-muted-foreground font-medium">({item.count})</p>
           </Button>
         ))}
       </div>

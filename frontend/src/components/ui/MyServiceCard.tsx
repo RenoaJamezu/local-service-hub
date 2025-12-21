@@ -38,7 +38,7 @@ export default function MyServiceCard({ service, onToggle, onEdit, onDelete }: M
       <div className="flex justify-between">
         <div className="flex items-center gap-3 mb-3">
           <h2 className="text-2xl font-medium">{service.title}</h2>
-          <span className={`text-sm px-4 py-1 rounded-full font-medium ${service.status === "active" ? "bg-success/25 text-success" : "bg-destructive/25 text-destructive"}`}>{service.status}</span>
+          <p className={`text-sm px-4 py-1 rounded-full font-medium ${service.status === "active" ? "bg-success/25 text-success" : "bg-destructive/25 text-destructive"}`}>{service.status}</p>
         </div>
         <div className="flex items-center gap-3">
           <Button
@@ -66,10 +66,10 @@ export default function MyServiceCard({ service, onToggle, onEdit, onDelete }: M
           </div>
         </div>
       </div>
-      <span className="text-muted-foreground mb-3">{service.description}</span>
+      <p className="text-muted-foreground mb-3">{service.description}</p>
       <div className="flex items-center gap-3">
-        <span className="text-primary font-medium">₱{service.price}</span>
-        <span className="text-muted-foreground">{service.category}</span>
+        <p className="text-primary font-medium">₱{service.price}</p>
+        <p className="text-muted-foreground">{service.category}</p>
       </div>
     </div>
   )

@@ -2,7 +2,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "../../utils/cn";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "default" | "outline" | "ghost" | "active" | "destructive";
+  variant?: "default" | "outline" | "active" | "destructive";
 };
 
 export default function Button({className, variant, ...props}: ButtonProps) {
@@ -13,11 +13,10 @@ const buttonVariants = cva("px-4 py-2 rounded-lg",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80 shadow",
-        outline: "outline outline-muted-foreground/25 hover:bg-muted",
-        ghost: "hover:bg-muted",
-        active: "text-primary border-primary bg-primary/5",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80 shadow",
+        default: "shadow bg-primary text-primary-foreground hover:bg-primary/80 hover:shadow-lg",
+        outline: "shadow bg-white hover:bg-muted hover:shadow-lg",
+        active: "shadow text-primary border-primary bg-primary/5 hover:shadow-lg",
+        destructive: "shadow bg-destructive text-destructive-foreground hover:bg-destructive/80 hover:shadow-lg",
       }
     },
     defaultVariants: {

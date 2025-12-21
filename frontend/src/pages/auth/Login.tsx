@@ -54,11 +54,11 @@ function Login() {
         <div className="flex flex-col items-center text-center mb-5">
           <Link
             to="/"
-            className="bg-linear-to-br from-primary to-muted-foreground p-3 rounded-lg">
+            className="bg-linear-to-br from-primary to-primary/90 p-3 rounded-lg">
             <AiOutlineHome className="text-3xl text-white" />
           </Link>
-          <h1 className="text-2xl font-medium text-center mb-2">Welcome back</h1>
-          <span className="text-muted-foreground">Sign in to your LocalServiceHub account</span>
+          <h1 className="text-2xl font-medium text-center mb-1">Welcome back</h1>
+          <p className="text-muted-foreground">Sign in to your LocalServiceHub account</p>
         </div>
 
         {/* signup form */}
@@ -92,19 +92,19 @@ function Login() {
           className="w-full mb-4"
         >
           {loading ? (
-            <span className="flex items-center gap-2 justify-center text-xl">
+            <p className="flex items-center gap-2 justify-center text-xl">
               <IoLogInOutline className="text-2xl" />
               Signing in...
-            </span>
+            </p>
           ) : (
-            <span className="flex items-center gap-2 justify-center text-xl">
+            <p className="flex items-center gap-2 justify-center text-xl">
               <IoLogInOutline className="text-2xl" />
               Sign in
-            </span>
+            </p>
           )}
         </Button>
 
-        <span className="text-muted-foreground">Don't have an account? <Link to="/signup" className="text-primary">Sign up</Link></span>
+        <p className="text-muted-foreground">Don't have an account? <Link to="/signup" className="text-primary">Sign up</Link></p>
       </form>
     </div>
   )

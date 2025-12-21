@@ -49,8 +49,8 @@ export default function StatsCard({
       </span>
 
       <div className="flex flex-col">
-        <span className="text-xl">{count}</span>
-        <span className="text-lg text-muted-foreground">{label}</span>
+        <p className="text-xl">{count}</p>
+        <p className="text-lg text-muted-foreground">{label}</p>
       </div>
     </div>
   )

@@ -87,16 +87,16 @@ function Signup() {
         <div className="flex flex-col items-center text-center mb-5">
           <Link
             to="/"
-            className="bg-linear-to-br from-primary to-muted-foreground p-3 rounded-lg">
+            className="bg-linear-to-br from-primary to-primary/90 p-3 rounded-lg">
             <AiOutlineHome className="text-3xl text-white" />
           </Link>
-          <h1 className="text-2xl font-medium text-center mb-2">Create an account</h1>
-          <span className="text-muted-foreground">Join LocalServiceHub today</span>
+          <h1 className="text-2xl font-medium text-center mb-1">Create an account</h1>
+          <p className="text-muted-foreground">Join LocalServiceHub today</p>
         </div>
 
         {/* role */}
         <div className="flex flex-col gap-2 mb-4 text-start">
-          <span className="text-muted-foreground text-lg">I want to</span>
+          <p className="text-muted-foreground text-lg">I want to</p>
           <div className="flex gap-4 justify-between">
             {roles.map((role) => (
               <Button
@@ -113,8 +113,8 @@ function Signup() {
                   <div className={`text-3xl p-4 bg-muted rounded-lg ${activeRole === role.id && "bg-primary/30"}`}>
                     {role.icon}
                   </div>
-                  <span className="font-medium mt-3">{role.label}</span>
-                  <span className="text-muted-foreground">{role.text}</span>
+                  <p className="font-medium mt-3">{role.label}</p>
+                  <p className="text-muted-foreground">{role.text}</p>
                 </div>
               </Button>
             ))}
@@ -174,19 +174,19 @@ function Signup() {
           className="w-full mb-4"
         >
           {loading ? (
-            <span className="flex items-center gap-2 justify-center text-xl">
+            <p className="flex items-center gap-2 justify-center text-xl">
               <AiOutlineUserAdd />
               Creating accound...
-            </span>
+            </p>
           ) : (
-            <span className="flex items-center gap-2 justify-center text-xl">
+            <p className="flex items-center gap-2 justify-center text-xl">
               <AiOutlineUserAdd />
               Create an account
-            </span>
+            </p>
           )}
         </Button>
 
-        <span className="text-muted-foreground">Already have an account? <Link to="/login" className="text-primary">Sign in</Link></span>
+        <p className="text-muted-foreground">Already have an account? <Link to="/login" className="text-primary">Sign in</Link></p>
       </form>
     </div>
   )

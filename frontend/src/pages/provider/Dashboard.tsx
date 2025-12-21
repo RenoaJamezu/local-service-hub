@@ -86,10 +86,10 @@ function Dashboard() {
         <div>
           <div className="flex gap-3 items-center text-primary mb-3">
             <MdOutlineDashboard className="text-3xl" />
-            <span className="font-medium text-lg">Provider Dashboard</span>
+            <h1 className="font-medium text-lg">Provider Dashboard</h1>
           </div>
           <h1 className="text-3xl font-medium mb-2">Welcome back, {user?.name}</h1>
-          <span className="text-muted-foreground text-xl">Manage your incoming requests</span>
+          <p className="text-muted-foreground text-xl">Manage your incoming requests</p>
         </div>
       </div>
 
