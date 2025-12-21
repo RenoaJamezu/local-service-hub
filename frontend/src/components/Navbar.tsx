@@ -61,9 +61,10 @@ function Navbar() {
   ];
 
   return (
-    <header className={`fixed top-0 w-full h-16 sm:h-20 z-50 transition-colors px-4 sm:px-6 md:px-10 flex items-center justify-between bg-white border-b border-black/30 shadow ${scrolled
-      ? "backdrop-blur-xs bg-white/50"
-      : "bg-transparent"
+    <header className={`fixed top-0 w-full h-16 sm:h-20 z-50 transition-colors px-4 sm:px-6 md:px-10 flex items-center justify-between bg-white border-b border-black/30 shadow 
+      ${scrolled
+        ? "backdrop-blur-xs bg-white/50"
+        : "bg-transparent"
       }`}>
       {/* logo */}
       <div className="flex items-center gap-2 sm:gap-3">
@@ -164,7 +165,11 @@ function Navbar() {
 
       {/* mobile menu */}
       {mobileMenuOpen && (
-        <div className="absolute top-16 sm:top-20 left-0 right-0 bg-white border-b border-black/10 shadow-lg md:hidden">
+        <div className={`absolute top-16 sm:top-20 left-0 right-0 bg-white border-b border-black/10 shadow-lg md:hidden
+        ${scrolled
+            ? "backdrop-blur-xs bg-white/50"
+            : "bg-transparent"
+          }`}>
           <div className="flex flex-col p-4 gap-3">
             {/* user tabs */}
             {user?.role === "user" && (
@@ -177,7 +182,7 @@ function Navbar() {
                   >
                     {({ isActive }) => (
                       <Button
-                        variant={isActive ? "active" : "outline"}
+                        variant={isActive ? "default" : "outline"}
                         className="w-full flex items-center gap-2 justify-center text-sm"
                       >
                         <span className="text-lg">{icon}</span>
@@ -200,7 +205,7 @@ function Navbar() {
                   >
                     {({ isActive }) => (
                       <Button
-                        variant={isActive ? "active" : "outline"}
+                        variant={isActive ? "default" : "outline"}
                         className="w-full flex items-center gap-2 justify-center text-sm"
                       >
                         <span className="text-lg">{icon}</span>
