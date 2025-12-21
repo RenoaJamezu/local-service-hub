@@ -49,23 +49,27 @@ export async function createBooking(req: Request, res: Response, next: NextFunct
   };
 };
 
-export async function getProviderBookings(req: Request, res: Response, next: NextFunction) {
+export async function getBookings(req: Request, res: Response, next: NextFunction) {
   try {
-    // get the provider id and status
-    const providerId = (req as any).userId;
-    const { status } = req.query;
+    // get the user id and role
+    const userRole = (req as any).role;
+    const userId = (req as any).userId;
 
-    // base query: provider owns the booking
-    const query: any = { provider: providerId };
+    if (!userRole || !userId) throw new AppError("Role and Id not found", 404);
 
-    // optional filter
-    if (status) {
-      query.status = status;
+    // filter based on role
+    let filter: any = {};
+
+    if (userRole === "user") {
+      filter.user = userId;
+    } else if (userRole === "provider") {
+      filter.provider = userId;
     };
 
-    const bookings = await Booking.find(query)
+    const bookings = await Booking.find(filter)
       .populate("user", "name email")
       .populate("service", "title price")
+      .populate("provider", "name email")
       .sort({ createdAt: -1 });
 
     return res.status(200).json(bookings);
@@ -137,13 +141,25 @@ export async function cancelBooking(req: Request, res: Response, next: NextFunct
   };
 };
 
-export async function getProviderStats(req: Request, res: Response, next: NextFunction) {
+export async function getBookingStats(req: Request, res: Response, next: NextFunction) {
   try {
-    // get the provider id
-    const providerId = (req as any).userId;
+    // get the user id and role
+    const userRole = (req as any).role;
+    const userId = (req as any).userId;
 
-    // get all bookings for provider
-    const bookings = await Booking.find({ provider: providerId });
+    if (!userRole || !userId) throw new AppError("Role and Id not found", 404);
+
+    // filter based on role
+    let filter: any = {};
+
+    if (userRole === "user") {
+      filter.user = userId;
+    } else if (userRole === "provider") {
+      filter.provider = userId;
+    };
+
+    // get all bookings
+    const bookings = await Booking.find(filter);
 
     // calculate stats
     const stats = {

@@ -2,8 +2,8 @@ import { Router } from "express";
 import { 
   cancelBooking, 
   createBooking, 
-  getProviderBookings, 
-  getProviderStats, 
+  getBookings,
+  getBookingStats, 
   updateBookingStatus 
 } from "../controllers/booking.controller";
 import { protect } from "../middleware/auth.middleware";
@@ -12,10 +12,10 @@ import { authorize } from "../middleware/role.middleware";
 const router = Router();
 
 // provider views the booking
-router.get("/provider", protect, authorize("provider"), getProviderBookings);
+router.get("/", protect, getBookings);
 
 // booking stats
-router.get("/provider/stats", protect, authorize("provider"), getProviderStats);
+router.get("/stats", protect, getBookingStats);
 
 // user creates a booking
 router.post("/", protect, authorize("user"), createBooking);
