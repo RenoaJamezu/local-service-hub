@@ -42,7 +42,7 @@ export default function StatsCard({
   }
 
   return (
-    <div className={`w-full flex items-center gap-3 px-3 py-4 rounded-lg shadow h-16 sm:h-24 ${styles.container}`}>
+    <div className={`w-full flex items-center gap-1.5 md:gap-3 px-2 md:px-3 py-4 rounded-lg shadow h-16 sm:h-24 ${styles.container}`}>
       <span className={`text-xl sm:text-4xl rounded-lg p-2 ${styles.iconBg}`}>{icon}</span>
       <div className="flex flex-col">
         <p className="text-md sm:text-xl font-medium">{count}</p>
