@@ -19,9 +19,6 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // routes
-app.get("/", (req, res) => {
-  res.send("Hello Local-Service-Hub");
-});
 app.use("/api/test", testRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/services", serviceRoutes);
