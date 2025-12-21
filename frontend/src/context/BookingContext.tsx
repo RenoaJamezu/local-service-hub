@@ -1,6 +1,7 @@
 import { createContext, useCallback, useState } from "react";
 import { useBookingApi } from "../api/useBookingApi";
 import toast from "react-hot-toast";
+import { useService } from "../hooks/useService";
 
 interface Booking {
   _id: string;
@@ -54,6 +55,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(false);
 
   const api = useBookingApi();
+  const { fetchServices } = useService();
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -122,6 +124,7 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
     } catch {
       toast.error("Failed to request service");
     } finally {
+      await fetchServices();
       await refresh();
       setLoading(false);
     };
