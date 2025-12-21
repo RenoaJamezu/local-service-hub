@@ -29,7 +29,7 @@ type BookingItem = {
 };
 
 function Bookings() {
-  const { stats, bookings, refresh, acceptBooking, rejectBooking } = useBooking();
+  const { stats, bookings, loading, refresh, acceptBooking, rejectBooking } = useBooking();
 
   const [activeTab, setActiveTab] = useState("all");
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
@@ -74,13 +74,14 @@ function Bookings() {
     },
   ];
 
-  const handleAccept = (_id: string) => {
-    acceptBooking(_id);
-    setAcceptModal(false);
+  const handleAccept = async (_id: string) => {
+    await acceptBooking(_id);
+    if (!loading) setAcceptModal(false);
   };
-  const handleReject = (_id: string) => {
-    rejectBooking(_id);
-    setRejectModal(false);
+
+  const handleReject = async (_id: string) => {
+    await rejectBooking(_id);
+    if (!loading) setRejectModal(false);
   };
 
   return (
