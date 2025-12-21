@@ -1,5 +1,6 @@
-import { createContext, useState } from "react";
-import api from "../api/axios";
+import { createContext, useCallback, useState } from "react";
+import { useBookingApi } from "../api/useBookingApi";
+import toast from "react-hot-toast";
 
 interface Booking {
   _id: string;
@@ -31,8 +32,7 @@ interface BookingContextType {
   bookings: Booking[];
   stats: Stats | null;
   loading: boolean;
-  fetchBookings: () => Promise<void>;
-  fetchStats: () => Promise<void>;
+  refresh: () => Promise<void>;
   acceptBooking: (_id: string) => Promise<void>;
   rejectBooking: (_id: string) => Promise<void>;
 };
@@ -44,49 +44,50 @@ export function BookingProvider({ children }: { children: React.ReactNode }) {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchBookings = async () => {
+  const api = useBookingApi();
+
+  const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/api/bookings/provider");
-      setBookings(res.data);
+      const [bookingRes, statsRes] = await Promise.all([
+        api.getBookings(),
+        api.getStats(),
+      ]);
+
+      setBookings(bookingRes);
+      setStats(statsRes);
+    } catch {
+      toast.error("Failed to load bookings");
     } finally {
+      setLoading(false);
+    };
+  }, [api]);
+
+  const acceptBooking = async (id: string) => {
+    setLoading(true);
+    try {
+      await api.acceptBooking(id);
+      toast.success("Booking accepted");
+    } catch {
+      toast.error("Failed to accept");
+    } finally {
+      await refresh();
       setLoading(false);
     };
   };
 
-  const fetchStats = async () => {
+  const rejectBooking = async (id: string) => {
     setLoading(true);
     try {
-      const res = await api.get("/api/bookings/provider/stats");
-      setStats(res.data);
+      await api.rejectBooking(id);
+      toast.success("Booking rejected");
+    } catch {
+      toast.error("Failed to reject");
     } finally {
+      await refresh();
       setLoading(false);
     };
   };
-
-  const acceptBooking = async (_id: string) => {
-  setLoading(true);
-  try {
-    const res = await api.put(`/api/bookings/${_id}/status`, { status: "accepted" });
-    const updated = res.data;
-    setBookings((prev) => prev.map((b) => (b._id === updated._id ? updated : b)));
-    await fetchStats();
-  } finally {
-    setLoading(false);
-  }
-};
-
-const rejectBooking = async (_id: string) => {
-  setLoading(true);
-  try {
-    const res = await api.put(`/api/bookings/${_id}/status`, { status: "rejected" });
-    const updated = res.data;
-    setBookings((prev) => prev.map((b) => (b._id === updated._id ? updated : b)));
-    await fetchStats();
-  } finally {
-    setLoading(false);
-  }
-};
 
   return (
     <BookingContext.Provider
@@ -94,8 +95,7 @@ const rejectBooking = async (_id: string) => {
         bookings,
         stats,
         loading,
-        fetchBookings,
-        fetchStats,
+        refresh,
         acceptBooking,
         rejectBooking,
       }}

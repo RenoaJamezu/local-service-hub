@@ -1,5 +1,6 @@
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import Button from "./Button";
+import { useService } from "../../hooks/useService";
 
 interface MyServiceCardProps {
   service: {
@@ -22,8 +23,18 @@ interface MyServiceCardProps {
 };
 
 export default function MyServiceCard({ service, onToggle, onEdit, onDelete }: MyServiceCardProps) {
+  const { loading } = useService();
+
+  if (loading) return (
+    <div className="flex flex-col h-36 shadow rounded-lg p-5 bg-white animate-pulse gap-3 fade-slide-in">
+      <div className="h-10 w-2/6 bg-gray-300"></div>
+      <div className="h-8 w-1/6 bg-gray-300"></div>
+      <div className="h-8 w-2/7 bg-gray-300"></div>
+    </div>
+  );
+
   return (
-    <div className={`flex flex-col h-36 rounded-lg p-5 bg-white hover:shadow ${service.status === "inactive" && "opacity-50"}`}>
+    <div className={`flex flex-col h-36 bg-white rounded-lg p-5  shadow transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-lg fade-slide-in ${service.status === "inactive" && "opacity-50"}`}>
       <div className="flex justify-between">
         <div className="flex items-center gap-3 mb-3">
           <h2 className="text-2xl font-medium">{service.title}</h2>

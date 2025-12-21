@@ -2,6 +2,7 @@ import { HiOutlineWrench } from "react-icons/hi2";
 import Button from "./Button";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail, MdOutlineMessage } from "react-icons/md";
+import { useBooking } from "../../hooks/useBooking";
 
 interface BookingCardProps {
   booking: {
@@ -27,6 +28,8 @@ interface BookingCardProps {
 };
 
 export default function BookingCard({ booking, onAccept, onReject, showActions = true }: BookingCardProps) {
+  const { loading } = useBooking();
+
   const formattedDate = new Date(booking.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" });
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -37,8 +40,28 @@ export default function BookingCard({ booking, onAccept, onReject, showActions =
     cancelled: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground",
   };
 
+  if (loading) return (
+    <div className="outline outline-muted-foreground/50 bg-white rounded-lg p-5 flex flex-col h-72 animate-pulse fade-slide-in">
+      <div className="flex gap-2 mb-3">
+        <div className="bg-primary/25 rounded-lg p-2">
+          <HiOutlineWrench className="text-3xl text-primary" />
+        </div>
+        <div className="flex flex-col w-full gap-1">
+          <div className="w-3/5 h-6 bg-gray-300"></div>
+          <div className="w-1/4 h-5 bg-gray-300"></div>
+        </div>
+      </div>
+
+      <div className="w-3/5 h-4 bg-gray-300 mb-1"></div>
+      <div className="w-3/5 h-4 bg-gray-300 mb-3"></div>
+
+      <div className="bg-muted h-16">
+      </div>
+    </div>
+  );
+
   return (
-    <div className="outline outline-muted-foreground/50 bg-white rounded-lg p-5 flex flex-col h-72">
+    <div className="bg-white rounded-lg p-5 flex flex-col h-72 shadow transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-lg fade-slide-in">
       {/* header */}
       <div className="flex justify-between items-center mb-3">
         <div className="flex gap-2">
@@ -46,7 +69,7 @@ export default function BookingCard({ booking, onAccept, onReject, showActions =
             <HiOutlineWrench className="text-3xl text-primary" />
           </div>
           <div className="flex flex-col">
-            <span className="text-md font-medium line-clamp-1">{booking.service.title}</span>
+            <span className="text-md font-medium line-clamp-1 mr-3">{booking.service.title}</span>
             <span className="text-sm text-muted-foreground">₱{booking.service.price}</span>
           </div>
         </div>
@@ -79,7 +102,7 @@ export default function BookingCard({ booking, onAccept, onReject, showActions =
       </span>
 
       {showActions && (
-        <div className="grid sm:grid-cols-2 gap-3 mt-auto">
+        <div className="grid sm:grid-cols-2 gap-3 mt-3">
           <Button
             onClick={onAccept}
             className="w-full text-sm "

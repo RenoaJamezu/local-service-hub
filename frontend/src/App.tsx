@@ -16,6 +16,7 @@ import ProviderLayout from "./pages/provider/ProviderLayout";
 import UserLayout from "./pages/user/UserLayout";
 import { useAuth } from "./hooks/useAuth";
 import Spinner from "./components/Spinner";
+import { ScrollToTop } from "./utils/ScrollToTop";
 
 function App() {
   const { loading } = useAuth();
@@ -26,6 +27,7 @@ function App() {
     <>
       <Toaster />
       <Router>
+        <ScrollToTop />
         <Routes>
           {/* public routes */}
           <Route path="/" element={<Index />} />

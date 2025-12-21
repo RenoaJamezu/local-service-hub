@@ -1,17 +1,15 @@
-import { createContext, useEffect, useState } from "react";
-import api from "../api/axios";
-
-interface User{
-  _id: string;
-  name: string;
-  email: string;
-  role: "user" | "provider";
-  createdAt: Date;
-};
+import { createContext, useCallback, useEffect, useState } from "react";
+import { useMe } from "../api/useMe";
 
 interface AuthContextType {
   token: string | null;
-  user: User | null;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+    role: "user" | "provider";
+    createdAt: Date;
+  } | null;
   loading: boolean;
   login: (token: string) => void;
   logout: () => void;
@@ -23,40 +21,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  const login = (token: string) => {
+  const { user, setUser, fetchMe } = useMe();
+
+  const [loading, setLoading] = useState(!!localStorage.getItem("token"));
+
+  const login = useCallback((token: string) => {
     localStorage.setItem("token", token);
     setToken(token);
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
-    
-  };
+  }, [setUser]);
 
   useEffect(() => {
-    async function fetchUser() {
-      if (!token) {
-        setLoading(false);
-        return;
-      };
-  
-      try {
-        const res = await api.get("/api/auth/me");
-        setUser(res.data);
-      } catch {
-        logout();
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!token) return;
 
-    fetchUser();
-  }, [token]);
+    fetchMe()
+      .catch(() => {
+        logout();
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [token, fetchMe, logout]);
 
   return (
     <AuthContext.Provider value={{ token, user, loading, login, logout }}>

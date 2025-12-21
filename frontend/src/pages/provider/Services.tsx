@@ -6,8 +6,7 @@ import { HiOutlineWrench } from "react-icons/hi2";
 import MyServicesCard from "../../components/ui/MyServiceCard";
 import { useService } from "../../hooks/useService";
 import ConfirmModal from "../../components/ui/ConfirmModal";
-import toast from "react-hot-toast";
-import api from "../../api/axios";
+import NoData from "../../components/ui/NoData";
 
 type ServiceItem = {
   _id: string;
@@ -25,47 +24,32 @@ type ServiceItem = {
 };
 
 function Services() {
-  const { services, loading, fetchServices } = useService();
+  const { services, fetchServices, toggleServiceStatus, deleteService } = useService();
 
   const [serviceFormModal, setServiceFormModal] = useState(false);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [toggleModal, setToggleModal] = useState(false);
 
-  useEffect(() => {
-    fetchServices();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleToggleStatus = async () => {
+    if (!selectedService) return;
+    const updateStatus = selectedService?.status === "active" ? "inactive" : "active";
 
-  const toggleServiceStatus = async () => {
-    try {
-      const updateStatus = selectedService?.status === "active" ? "inactive" : "active";
-
-      await api.put(`/api/services/${selectedService?._id}/update-status`, {
-        status: updateStatus,
-      });
-
-      toast.success("Service status updated");
-      setToggleModal(false);
-      fetchServices();
-    } catch (error) {
-      toast.error("Failed to update service status");
-      console.log(error);
-    };
+    await toggleServiceStatus(selectedService?._id, updateStatus);
+    setToggleModal(false);
   };
 
   const handleDelete = async () => {
-    try {
-      await api.put(`/api/services/${selectedService?._id}/delete`);
+    if (!selectedService) return;
 
-      toast.success("Service deleted");
-      setDeleteModal(false);
-      fetchServices();
-    } catch (error) {
-      toast.error("Failed to delete service");
-      console.log(error);
-    };
+    await deleteService(selectedService._id);
+    setDeleteModal(false);
   };
+
+  useEffect(() => {
+    fetchServices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <main>
@@ -95,44 +79,43 @@ function Services() {
 
       {/* provider services card */}
       <div className="space-y-5">
-        {loading ? (
-          <>
-            {services.map(() => (
-              <div className="flex flex-col h-36 shadow rounded-lg p-5 bg-white animate-pulse">
-                <div className="h-10 w-2/6 bg-gray-300 mb-3"></div>
-                <div className="h-8 w-1/6 bg-gray-300 mb-3"></div>
-                <div className="h-8 w-2/7 bg-gray-300"></div>
-              </div>
-            ))}
-          </>
+        {services.length === 0 ? (
+          <div className="flex flex-col items-center h-full">
+            <NoData
+              icon={<HiOutlineWrench />}
+              title="No services yet"
+              message="Create your first service to start receiving bookings."
+            />
+            <Button
+              onClick={() => {
+                setServiceFormModal(true);
+                setSelectedService(null);
+              }}
+              className="font-medium"
+            >
+              Create Service
+            </Button>
+          </div>
         ) : (
           <>
-            {services.length === 0 ? (
-              <>
-                <span>No services provided</span>
-              </>
-            ) : (
-              <>
-                {services.map((item) => (
-                  <MyServicesCard
-                    key={item._id}
-                    service={item}
-                    onToggle={() => {
-                      setSelectedService(item);
-                      setToggleModal(true);
-                    }}
-                    onEdit={() => {
-                      setSelectedService(item);
-                      setServiceFormModal(true);
-                    }}
-                    onDelete={() => {
-                      setSelectedService(item);
-                      setDeleteModal(true);
-                    }}
-                  />
-                ))}
-              </>
-            )}
+            {services.map((item) => (
+              <MyServicesCard
+                key={item._id}
+                service={item}
+                onToggle={() => {
+                  setSelectedService(item);
+                  setToggleModal(true);
+                }}
+                onEdit={() => {
+                  setSelectedService(item);
+                  setServiceFormModal(true);
+                }}
+                onDelete={() => {
+                  setSelectedService(item);
+                  setDeleteModal(true);
+                }}
+              />
+            ))}
           </>
         )}
       </div>
@@ -154,7 +137,7 @@ function Services() {
         message={`Are you sure you want to update the service status to ${selectedService?.status === "active" ? "inactive" : "active"}`}
         confirmText="Update"
         onCancel={() => setToggleModal(false)}
-        onConfirm={toggleServiceStatus}
+        onConfirm={handleToggleStatus}
       />
 
       <ConfirmModal

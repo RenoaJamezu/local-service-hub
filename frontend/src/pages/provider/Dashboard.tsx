@@ -1,12 +1,13 @@
 import { MdOutlineDashboard } from "react-icons/md";
 import { useAuth } from "../../hooks/useAuth"
 import { HiOutlineClock } from "react-icons/hi2";
-import { IoCheckmarkCircleOutline, IoCloseCircleOutline, IoStopCircleOutline } from "react-icons/io5";
+import { IoCalendarClearOutline, IoCheckmarkCircleOutline, IoCloseCircleOutline, IoStopCircleOutline } from "react-icons/io5";
 import { useBooking } from "../../hooks/useBooking";
 import { useEffect, useState } from "react";
 import StatsCard from "../../components/ui/StatsCard";
 import BookingCard from "../../components/ui/BookingCard";
 import ConfirmModal from "../../components/ui/ConfirmModal";
+import NoData from "../../components/ui/NoData";
 
 type BookingItem = {
   _id: string;
@@ -28,7 +29,7 @@ type BookingItem = {
 
 function Dashboard() {
   const { user } = useAuth();
-  const { stats, bookings, loading, fetchStats, fetchBookings, acceptBooking, rejectBooking } = useBooking();
+  const { stats, bookings, loading, refresh, acceptBooking, rejectBooking } = useBooking();
 
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
   const [acceptModal, setAcceptModal] = useState(false);
@@ -37,8 +38,7 @@ function Dashboard() {
   const pendingBookings = bookings.filter((b) => b.status === "pending");
 
   useEffect(() => {
-    fetchStats();
-    fetchBookings();
+    refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,14 +69,14 @@ function Dashboard() {
     },
   ];
 
-  const handleAccept = (_id: string) => {
-    acceptBooking(_id);
-    setAcceptModal(false);
+  const handleAccept = async (_id: string) => {
+    await acceptBooking(_id);
+    if (!loading) setAcceptModal(false);
   };
 
-  const handleReject = (_id: string) => {
-    rejectBooking(_id);
-    setRejectModal(false);
+  const handleReject = async (_id: string) => {
+    await rejectBooking(_id);
+    if (!loading) setRejectModal(false);
   };
 
   return (
@@ -95,28 +95,15 @@ function Dashboard() {
 
       {/* stats */}
       <div className="grid sm:grid-cols-4 gap-3 mb-10">
-        {loading ? (
-          <>
-            {statsData.map((item) => (
-              <div
-                key={item.label}
-                className={`flex items-center gap-3 px-3 py-4 rounded-lg shadow h-24 bg-${item.color}/10 animate-pulse`}>
-              </div>
-            ))}
-          </>
-        ) : (
-          <>
-            {statsData.map((item) => (
-              <StatsCard
-                key={item.label}
-                icon={item.icon}
-                count={item.count}
-                label={item.label}
-                color={item.color}
-              />
-            ))}
-          </>
-        )}
+        {statsData.map((item) => (
+          <StatsCard
+            key={item.label}
+            icon={item.icon}
+            count={item.count}
+            label={item.label}
+            color={item.color}
+          />
+        ))}
       </div>
 
       {/* pending requests */}
@@ -124,30 +111,30 @@ function Dashboard() {
         <div className="w-2.5 h-2.5 rounded-full bg-accent"></div>
         <h2 className="text-2xl font-medium">Pending Requests</h2>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {pendingBookings.length === 0 ? (
-          <>
-            <span>No bookings</span>
-          </>
-        ) : (
-          <>
-            {pendingBookings.map((item) => (
-              <BookingCard
-                key={item._id}
-                booking={item}
-                onAccept={() => {
-                  setSelectedBooking(item);
-                  setAcceptModal(true);
-                }}
-                onReject={() => {
-                  setSelectedBooking(item);
-                  setRejectModal(true);
-                }}
-              />
-            ))}
-          </>
-        )}
-      </div>
+      {pendingBookings.length === 0 ? (
+        <NoData
+          icon={<IoCalendarClearOutline />}
+          title="No booking requests"
+          message="You haven't received any booking requests yet. They'll appear here when customers request your services."
+        />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+          {pendingBookings.map((item) => (
+            <BookingCard
+              key={item._id}
+              booking={item}
+              onAccept={() => {
+                setSelectedBooking(item);
+                setAcceptModal(true);
+              }}
+              onReject={() => {
+                setSelectedBooking(item);
+                setRejectModal(true);
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* confirm modals */}
       <ConfirmModal
@@ -161,7 +148,7 @@ function Dashboard() {
             handleAccept(selectedBooking?._id);
         }}
       />
-      
+
       <ConfirmModal
         isOpen={rejectModal}
         title="Reject Booking"

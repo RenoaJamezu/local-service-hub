@@ -1,3 +1,5 @@
+import { useBooking } from "../../hooks/useBooking";
+
 interface StatsCardProps {
   icon: React.ReactNode;
   count: number;
@@ -31,6 +33,15 @@ export default function StatsCard({
   color,
 }: StatsCardProps) {
   const styles = colorStyles[color];
+
+  const { loading } = useBooking();
+
+  if (loading) return (
+    <div
+      className={`flex items-center gap-3 px-3 py-4 rounded-lg shadow h-24 ${styles.container} animate-pulse`}>
+    </div>
+  )
+
   return (
     <div className={`flex items-center gap-3 px-3 py-4 rounded-lg shadow h-24 ${styles.container}`}>
       <span className={`text-4xl rounded-lg p-2 ${styles.iconBg}`}>

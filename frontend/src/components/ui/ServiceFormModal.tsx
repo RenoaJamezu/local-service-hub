@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import Button from "./Button";
 import toast from "react-hot-toast";
-import api from "../../api/axios";
 import { useService } from "../../hooks/useService";
 
 interface ServiceFormModalProps {
@@ -18,8 +17,8 @@ interface ServiceFormModalProps {
 };
 
 export default function ServiceFormModal({ service, isOpen, onClose }: ServiceFormModalProps) {
-  const { fetchServices } = useService();
-  
+  const { createService, updateService } = useService();
+
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
@@ -54,25 +53,27 @@ export default function ServiceFormModal({ service, isOpen, onClose }: ServiceFo
 
     try {
       if (isEdit) {
-        await api.put(`/api/services/${service?._id}/update-details`, {
+        if (!service?._id) return;
+
+        await updateService(service?._id, {
+          title,
+          category,
+          price: Number(price),
+          description,
+        })
+        
+        toast.success("Service Updated");
+      } else {
+        await createService({
           title,
           category,
           price: Number(price),
           description,
         })
 
-        toast.success("Service Updated");
-      } else {
-        await api.post("/api/services", {
-          title,
-          category,
-          price: Number(price),
-          description,
-        });
-
         toast.success("Service Created");
-      }
-      fetchServices();
+      };
+      
       handleClose();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -93,12 +94,12 @@ export default function ServiceFormModal({ service, isOpen, onClose }: ServiceFo
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 backdrop-blur-lg flex flex-col items-center justify-center z-50 shadow-elevated">
-      <div className="outline outline-muted-foreground rounded-lg">
+    <div className="fixed inset-0 backdrop-blur-lg flex flex-col items-center justify-center z-50 shadow-elevated fade-zoom-in">
+      <div className="rounded-lg">
 
         {/* header */}
         <div className="bg-white rounded-t-lg shadow-lg p-6 w-104 flex items-center justify-between">
-          <h1 className="font-medium text-xl">Create New Service</h1>
+          <h1 className="font-medium text-xl">{isEdit ? "Edit Service" : "Create New Service"}</h1>
           <Button
             type="button"
             variant="ghost"
@@ -174,7 +175,7 @@ export default function ServiceFormModal({ service, isOpen, onClose }: ServiceFo
               type="submit"
               className="w-full"
             >
-              {loading ? (isEdit ? "Saving..." : "Creating...") : (isEdit ? "Update Service" : "Create Service")}
+              {loading ? (isEdit ? "Saving..." : "Creating...") : (isEdit ? "Save Service" : "Create Service")}
             </Button>
           </div>
         </form>

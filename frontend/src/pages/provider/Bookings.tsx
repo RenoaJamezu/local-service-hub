@@ -4,6 +4,7 @@ import Button from "../../components/ui/Button";
 import { useEffect, useState } from "react";
 import BookingCard from "../../components/ui/BookingCard";
 import ConfirmModal from "../../components/ui/ConfirmModal";
+import NoData from "../../components/ui/NoData";
 
 type BookingItem = {
   _id: string;
@@ -24,7 +25,7 @@ type BookingItem = {
 };
 
 function Bookings() {
-  const { stats, bookings, fetchStats, fetchBookings, acceptBooking, rejectBooking } = useBooking();
+  const { stats, bookings, refresh, acceptBooking, rejectBooking } = useBooking();
 
   const [activeTab, setActiveTab] = useState("all");
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
@@ -37,8 +38,7 @@ function Bookings() {
   const cancelledBookings = bookings.filter((b) => b.status === "cancelled");
 
   useEffect(() => {
-    fetchStats();
-    fetchBookings();
+    refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -96,6 +96,7 @@ function Bookings() {
 
       {/* all bookings */}
       {/* filter */}
+      {/* //todo: make this responsive for mobile */}
       <div className="flex items-center gap-2 mb-5">
         <IoFunnelOutline className="text-xl text-muted-foreground" />
         {statsTabs.map((item) => (
@@ -113,114 +114,139 @@ function Bookings() {
       </div>
 
       {/* diplay bookings */}
-      {activeTab === "all" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {bookings.length === 0 ? (
-          <>
-            <span>No bookings</span>
-          </>
-        ) : (
-          <>
-            {bookings.map((item) => (
-              <BookingCard
-                key={item._id}
-                booking={item}
-                onAccept={item.status === "pending" ? () => {
-                  setSelectedBooking(item);
-                  setAcceptModal(true);
-                } : undefined}
-                onReject={item.status === "pending" ? () => {
-                  setSelectedBooking(item);
-                  setRejectModal(true);
-                } : undefined}
-                showActions={item.status === "pending"}
+      {activeTab === "all" && (
+        <>
+          {bookings.length === 0 ? (
+            <div className="mt-20">
+              <NoData
+                icon={<IoCalendarClearOutline />}
+                title="No booking requests"
+                message="You haven't received any booking requests yet. They'll appear here when customers request your services."
               />
-            ))}
-          </>
-        )}
-      </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {bookings.map((item) => (
+                <BookingCard
+                  key={item._id}
+                  booking={item}
+                  onAccept={item.status === "pending" ? () => {
+                    setSelectedBooking(item);
+                    setAcceptModal(true);
+                  } : undefined}
+                  onReject={item.status === "pending" ? () => {
+                    setSelectedBooking(item);
+                    setRejectModal(true);
+                  } : undefined}
+                  showActions={item.status === "pending"}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
-      {activeTab === "pending" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {pendingBookings.length === 0 ? (
-          <>
-            <span>No bookings</span>
-          </>
-        ) : (
-          <>
-            {pendingBookings.map((item) => (
-              <BookingCard
-                key={item._id}
-                booking={item}
-                onAccept={() => {
-                  setSelectedBooking(item);
-                  setAcceptModal(true);
-                }}
-                onReject={() => {
-                  setSelectedBooking(item);
-                  setRejectModal(true);
-                }}
+      {activeTab === "pending" && (
+        <>
+          {pendingBookings.length === 0 ? (
+            <div className="mt-20">
+              <NoData
+                icon={<IoCalendarClearOutline />}
+                title="No booking requests"
+                message="You haven't received any booking requests yet. They'll appear here when customers request your services."
               />
-            ))}
-          </>
-        )}
-      </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {pendingBookings.map((item) => (
+                <BookingCard
+                  key={item._id}
+                  booking={item}
+                  onAccept={() => {
+                    setSelectedBooking(item);
+                    setAcceptModal(true);
+                  }}
+                  onReject={() => {
+                    setSelectedBooking(item);
+                    setRejectModal(true);
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
-      {activeTab === "accepted" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {acceptedBookings.length === 0 ? (
-          <>
-            <span>No bookings</span>
-          </>
-        ) : (
-          <>
-            {acceptedBookings.map((item) => (
-              <BookingCard
-                key={item._id}
-                booking={item}
-                showActions={false}
+      {activeTab === "accepted" && (
+        <>
+            {acceptedBookings.length === 0 ? (
+            <div className="mt-20">
+              <NoData
+                icon={<IoCalendarClearOutline />}
+                title="No accepted bookings"
+                message="You haven't accepted any booking requests yet. They'll appear here when you accepts a booking."
               />
-            ))}
-          </>
-        )}
-      </div>
+            </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                {acceptedBookings.map((item) => (
+                  <BookingCard
+                    key={item._id}
+                    booking={item}
+                    showActions={false}
+                  />
+                ))}
+          </div>
+            )}
+        </>
       )}
 
-      {activeTab === "rejected" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {rejectedBookings.length === 0 ? (
-          <>
-            <span>No bookings</span>
-          </>
-        ) : (
-          <>
-            {rejectedBookings.map((item) => (
-              <BookingCard
-                key={item._id}
-                booking={item}
-                showActions={false}
+      {activeTab === "rejected" && (
+        <>
+            {rejectedBookings.length === 0 ? (
+            <div className="mt-20">
+              <NoData
+                icon={<IoCalendarClearOutline />}
+                title="No rejected bookings"
+                message="You haven't rejected any booking requests yet. They'll appear here when you rejects a booking."
               />
-            ))}
-          </>
-        )}
-      </div>
+            </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                {rejectedBookings.map((item) => (
+                  <BookingCard
+                    key={item._id}
+                    booking={item}
+                    showActions={false}
+                  />
+                ))}
+          </div>
+            )}
+        </>
       )}
 
-      {activeTab === "cancelled" && (<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {cancelledBookings.length === 0 ? (
-          <>
-            <span>No bookings</span>
-          </>
-        ) : (
-          <>
-            {cancelledBookings.map((item) => (
-              <BookingCard
-                key={item._id}
-                booking={item}
-                showActions={false}
+      {activeTab === "cancelled" && (
+        <>
+            {cancelledBookings.length === 0 ? (
+            <div className="mt-20">
+              <NoData
+                icon={<IoCalendarClearOutline />}
+                title="No cancelled bookings"
+                message="No user have cancelled any booking requests. They'll appear here if user cancelled their request."
               />
-            ))}
-          </>
-        )}
-      </div>
+            </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                {cancelledBookings.map((item) => (
+                  <BookingCard
+                    key={item._id}
+                    booking={item}
+                    showActions={false}
+                  />
+                ))}
+          </div>
+            )}
+        </>
       )}
 
       {/* confirm modals */}

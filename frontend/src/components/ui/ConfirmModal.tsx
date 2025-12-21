@@ -28,7 +28,7 @@ export default function ConfirmModal({
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-96 p-6">
+      <div className="bg-white rounded-lg shadow-lg w-96 p-6 fade-zoom-in">
         <h2 className="text-xl font-medium mb-2">{title}</h2>
         <p className="text-muted-foreground mb-6">{message}</p>
 

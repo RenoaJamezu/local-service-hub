@@ -30,3 +30,34 @@
   --color-muted: hsl(40 20% 92%);
   --color-muted-foreground: hsl(220 10% 45%);
 }
+
+@keyframes fade-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0rem);
+  }
+}
+
+@keyframes fade-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.fade-slide-in {
+  animation: fade-slide-in 0.25s ease-out;
+}
+
+.fade-zoom-in {
+  animation: fade-zoom-in 240ms ease-out;
+  will-change: transform, opacity;
+}
