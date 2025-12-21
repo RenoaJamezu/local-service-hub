@@ -39,7 +39,7 @@ function Dashboard() {
 
   useEffect(() => {
     refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   const statsData = [
@@ -47,25 +47,25 @@ function Dashboard() {
       label: "Pending",
       count: stats?.pending as number,
       color: "accent" as const,
-      icon: <HiOutlineClock />,
+      icon: <HiOutlineClock />
     },
     {
       label: "Accepted",
       count: stats?.accepted as number,
       color: "primary" as const,
-      icon: <IoCheckmarkCircleOutline />,
+      icon: <IoCheckmarkCircleOutline />
     },
     {
       label: "Rejected",
       count: stats?.rejected as number,
       color: "destructive" as const,
-      icon: <IoCloseCircleOutline />,
+      icon: <IoCloseCircleOutline />
     },
     {
       label: "Cancelled",
       count: stats?.cancelled as number,
       color: "muted-foreground" as const,
-      icon: <IoStopCircleOutline />,
+      icon: <IoStopCircleOutline />
     },
   ];
 
@@ -80,21 +80,21 @@ function Dashboard() {
   };
 
   return (
-    <main>
+    <main className="px-4 sm:px-6 md:px-10">
       {/* header */}
-      <div className="flex justify-between items-center mb-10">
+      <div className="flex justify-between items-center mb-8 sm:mb-10">
         <div>
-          <div className="flex gap-3 items-center text-primary mb-3">
-            <MdOutlineDashboard className="text-3xl" />
-            <h1 className="font-medium text-lg">Provider Dashboard</h1>
+          <div className="flex gap-2 sm:gap-3 items-center text-primary mb-2 sm:mb-3">
+            <MdOutlineDashboard className="text-2xl sm:text-3xl" />
+            <h1 className="font-medium text-base sm:text-lg">Provider Dashboard</h1>
           </div>
-          <h1 className="text-3xl font-medium mb-2">Welcome back, {user?.name}</h1>
-          <p className="text-muted-foreground text-xl">Manage your incoming requests</p>
+          <h1 className="text-2xl sm:text-3xl font-medium mb-1 sm:mb-2">Welcome back, {user?.name}</h1>
+          <p className="text-muted-foreground text-base sm:text-lg">Manage your incoming requests</p>
         </div>
       </div>
 
       {/* stats */}
-      <div className="grid sm:grid-cols-4 gap-3 mb-10">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8 sm:mb-10">
         {statsData.map((item) => (
           <StatsCard
             key={item.label}
@@ -107,9 +107,9 @@ function Dashboard() {
       </div>
 
       {/* pending requests */}
-      <div className="flex items-center mb-5 gap-2">
-        <div className="w-2.5 h-2.5 rounded-full bg-accent"></div>
-        <h2 className="text-2xl font-medium">Pending Requests</h2>
+      <div className="flex items-center mb-4 sm:mb-5 gap-2">
+        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-accent"></div>
+        <h2 className="text-xl sm:text-2xl font-medium">Pending Requests</h2>
       </div>
       {pendingBookings.length === 0 ? (
         <NoData
@@ -118,7 +118,7 @@ function Dashboard() {
           message="You haven't received any booking requests yet. They'll appear here when customers request your services."
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
           {pendingBookings.map((item) => (
             <BookingCard
               key={item._id}
@@ -148,7 +148,6 @@ function Dashboard() {
             handleAccept(selectedBooking?._id);
         }}
       />
-
       <ConfirmModal
         isOpen={rejectModal}
         title="Reject Booking"

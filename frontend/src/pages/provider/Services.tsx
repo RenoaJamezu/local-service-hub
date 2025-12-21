@@ -34,14 +34,12 @@ function Services() {
   const handleToggleStatus = async () => {
     if (!selectedService) return;
     const updateStatus = selectedService?.status === "active" ? "inactive" : "active";
-
     await toggleServiceStatus(selectedService?._id, updateStatus);
     setToggleModal(false);
   };
 
   const handleDelete = async () => {
     if (!selectedService) return;
-
     await deleteService(selectedService._id);
     setDeleteModal(false);
   };
@@ -52,16 +50,17 @@ function Services() {
   }, [])
 
   return (
-    <main>
+    <main className="px-4 sm:px-6 md:px-10">
       {/* header */}
-      <div className="flex gap-3 items-center text-primary mb-3">
-        <HiOutlineWrench className="text-3xl" />
-        <h1 className="font-medium text-lg">All Services</h1>
+      <div className="flex items-center text-primary mb-2 sm:mb-3 gap-2 sm:gap-3">
+        <HiOutlineWrench className="text-2xl sm:text-3xl" />
+        <h1 className="font-medium text-base sm:text-lg">All Services</h1>
       </div>
-      <div className="flex justify-between items-center mb-10">
+
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-8 sm:mb-10">
         <div>
-          <h1 className="text-3xl font-medium mb-2">My Services</h1>
-          <p className="text-muted-foreground text-xl">Manage your service offerings</p>
+          <h1 className="text-2xl sm:text-3xl font-medium mb-1 sm:mb-2">My Services</h1>
+          <p className="text-muted-foreground text-base sm:text-lg">Manage your service offerings</p>
         </div>
         <div>
           <Button
@@ -69,18 +68,18 @@ function Services() {
               setServiceFormModal(true);
               setSelectedService(null);
             }}
-            className="flex items-center gap-2 font-medium"
+            className="flex items-center gap-2 font-medium px-4 py-2 text-sm sm:text-base"
           >
-            <MdAdd className="text-2xl" />
+            <MdAdd className="text-lg sm:text-2xl" />
             Add Service
           </Button>
         </div>
       </div>
 
       {/* provider services card */}
-      <div className="space-y-5">
+      <div className="space-y-4 sm:space-y-5">
         {services.length === 0 ? (
-          <div className="flex flex-col items-center h-full">
+          <div className="flex flex-col items-center justify-center text-center gap-4 sm:gap-5">
             <NoData
               icon={<HiOutlineWrench />}
               title="No services yet"
@@ -91,7 +90,7 @@ function Services() {
                 setServiceFormModal(true);
                 setSelectedService(null);
               }}
-              className="font-medium"
+              className="font-medium px-4 py-2 text-sm sm:text-base"
             >
               Create Service
             </Button>
@@ -139,7 +138,6 @@ function Services() {
         onCancel={() => setToggleModal(false)}
         onConfirm={handleToggleStatus}
       />
-
       <ConfirmModal
         isOpen={deleteModal}
         title="Delete Service"

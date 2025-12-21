@@ -39,34 +39,34 @@ function Bookings() {
 
   useEffect(() => {
     refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   const statsTabs = [
     {
       id: "all",
       label: "All",
-      count: stats?.total as number,
+      count: stats?.total as number
     },
     {
       id: "pending",
       label: "Pending",
-      count: stats?.pending as number,
+      count: stats?.pending as number
     },
     {
       id: "accepted",
       label: "Accepted",
-      count: stats?.accepted as number,
+      count: stats?.accepted as number
     },
     {
       id: "rejected",
       label: "Rejected",
-      count: stats?.rejected as number,
+      count: stats?.rejected as number
     },
     {
       id: "cancelled",
       label: "Cancelled",
-      count: stats?.cancelled as number,
+      count: stats?.cancelled as number
     },
   ];
 
@@ -74,50 +74,45 @@ function Bookings() {
     acceptBooking(_id);
     setAcceptModal(false);
   };
-
   const handleReject = (_id: string) => {
     rejectBooking(_id);
     setRejectModal(false);
   };
 
   return (
-    <main>
+    <main className="px-4 sm:px-6 md:px-10">
       {/* header */}
-      <div className="flex justify-between items-center mb-10">
+      <div className="flex justify-between items-center mb-8 sm:mb-10">
         <div>
-          <div className="flex gap-3 items-center text-primary mb-3">
-            <IoCalendarClearOutline className="text-3xl" />
-            <h1 className="font-medium text-lg">All Bookings</h1>
+          <div className="flex gap-2 sm:gap-3 items-center text-primary mb-2 sm:mb-3">
+            <IoCalendarClearOutline className="text-2xl sm:text-3xl" />
+            <h1 className="font-medium text-base sm:text-lg">All Bookings</h1>
           </div>
-          <h1 className="text-3xl font-medium mb-2">Booking History</h1>
-          <p className="text-muted-foreground text-xl">View and manage all your booking requests</p>
+          <h1 className="text-2xl sm:text-3xl font-medium mb-1 sm:mb-2">Booking History</h1>
+          <p className="text-muted-foreground text-base sm:text-lg">View and manage all your booking requests</p>
         </div>
       </div>
 
-      {/* all bookings */}
       {/* filter */}
-      {/* //todo: make this responsive for mobile */}
-      <div className="flex items-center gap-2 mb-5">
-        <IoFunnelOutline className="text-xl text-muted-foreground" />
+      <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5 flex-wrap">
+        <IoFunnelOutline className="text-lg sm:text-xl text-muted-foreground" />
         {statsTabs.map((item) => (
           <Button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            variant={activeTab === item.id
-              ? "default"
-              : "outline"
-            }
+            variant={activeTab === item.id ? "default" : "outline"}
+            className="text-sm sm:text-base whitespace-nowrap"
           >
-            {item.label} <p className="text-muted-foreground font-medium">({item.count})</p>
+            {item.label} <span className="text-muted-foreground font-medium ml-1">({item.count})</span>
           </Button>
         ))}
       </div>
 
-      {/* diplay bookings */}
+      {/* display bookings */}
       {activeTab === "all" && (
         <>
           {bookings.length === 0 ? (
-            <div className="mt-20">
+            <div className="mt-16 sm:mt-20">
               <NoData
                 icon={<IoCalendarClearOutline />}
                 title="No booking requests"
@@ -125,7 +120,7 @@ function Bookings() {
               />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
               {bookings.map((item) => (
                 <BookingCard
                   key={item._id}
@@ -149,7 +144,7 @@ function Bookings() {
       {activeTab === "pending" && (
         <>
           {pendingBookings.length === 0 ? (
-            <div className="mt-20">
+            <div className="mt-16 sm:mt-20">
               <NoData
                 icon={<IoCalendarClearOutline />}
                 title="No booking requests"
@@ -157,7 +152,7 @@ function Bookings() {
               />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
               {pendingBookings.map((item) => (
                 <BookingCard
                   key={item._id}
@@ -179,73 +174,73 @@ function Bookings() {
 
       {activeTab === "accepted" && (
         <>
-            {acceptedBookings.length === 0 ? (
-            <div className="mt-20">
+          {acceptedBookings.length === 0 ? (
+            <div className="mt-16 sm:mt-20">
               <NoData
                 icon={<IoCalendarClearOutline />}
                 title="No accepted bookings"
                 message="You haven't accepted any booking requests yet. They'll appear here when you accepts a booking."
               />
             </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-                {acceptedBookings.map((item) => (
-                  <BookingCard
-                    key={item._id}
-                    booking={item}
-                    showActions={false}
-                  />
-                ))}
-          </div>
-            )}
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
+              {acceptedBookings.map((item) => (
+                <BookingCard
+                  key={item._id}
+                  booking={item}
+                  showActions={false}
+                />
+              ))}
+            </div>
+          )}
         </>
       )}
 
       {activeTab === "rejected" && (
         <>
-            {rejectedBookings.length === 0 ? (
-            <div className="mt-20">
+          {rejectedBookings.length === 0 ? (
+            <div className="mt-16 sm:mt-20">
               <NoData
                 icon={<IoCalendarClearOutline />}
                 title="No rejected bookings"
                 message="You haven't rejected any booking requests yet. They'll appear here when you rejects a booking."
               />
             </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-                {rejectedBookings.map((item) => (
-                  <BookingCard
-                    key={item._id}
-                    booking={item}
-                    showActions={false}
-                  />
-                ))}
-          </div>
-            )}
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
+              {rejectedBookings.map((item) => (
+                <BookingCard
+                  key={item._id}
+                  booking={item}
+                  showActions={false}
+                />
+              ))}
+            </div>
+          )}
         </>
       )}
 
       {activeTab === "cancelled" && (
         <>
-            {cancelledBookings.length === 0 ? (
-            <div className="mt-20">
+          {cancelledBookings.length === 0 ? (
+            <div className="mt-16 sm:mt-20">
               <NoData
                 icon={<IoCalendarClearOutline />}
                 title="No cancelled bookings"
                 message="No user have cancelled any booking requests. They'll appear here if user cancelled their request."
               />
             </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-                {cancelledBookings.map((item) => (
-                  <BookingCard
-                    key={item._id}
-                    booking={item}
-                    showActions={false}
-                  />
-                ))}
-          </div>
-            )}
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
+              {cancelledBookings.map((item) => (
+                <BookingCard
+                  key={item._id}
+                  booking={item}
+                  showActions={false}
+                />
+              ))}
+            </div>
+          )}
         </>
       )}
 
@@ -261,7 +256,6 @@ function Bookings() {
             handleAccept(selectedBooking?._id);
         }}
       />
-
       <ConfirmModal
         isOpen={rejectModal}
         title="Reject Booking"
