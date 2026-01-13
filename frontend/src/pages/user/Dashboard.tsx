@@ -42,7 +42,7 @@ function Dashboard() {
   }, []);
 
   return (
-    <main className="px-4 sm:px-6 md:px-10">
+    <main className="px-4 sm:px-6 md:px-10 caret-transparent">
       {/* header */}
       <div className="flex justify-between items-center mb-8 sm:mb-10">
         <div>

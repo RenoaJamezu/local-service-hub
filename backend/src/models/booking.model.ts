@@ -40,5 +40,14 @@ const BookingSchema: Schema<IBooking> = new Schema<IBooking>(
   },
 );
 
+BookingSchema.index({ user: 1, status: 1, createdAt: -1 });
+BookingSchema.index({ provider: 1, status: 1, createdAt: -1 });
+BookingSchema.index({ service: 1, status: 1 });
+
+BookingSchema.index(
+  { user: 1, service: 1 },
+  { unique: true, partialFilterExpression: { status: { $in: ["pending", "accepted"] } } }
+);
+
 const Booking = mongoose.model<IBooking>("Booking", BookingSchema);
 export default Booking;

@@ -127,7 +127,7 @@ function Navbar() {
             <p className="text-xs lg:text-sm text-muted-foreground">Hi, <span className="text-black font-medium hidden lg:inline">{user?.name}</span></p>
             <Button
               variant="outline"
-              className="flex items-center gap-1 text-sm lg:text-base"
+              className="flex items-center gap-1 text-sm lg:text-base hover:bg-red-500 hover:text-white"
               onClick={handleLogout}
             >
               <IoLogOutOutline className="text-lg lg:text-2xl" />

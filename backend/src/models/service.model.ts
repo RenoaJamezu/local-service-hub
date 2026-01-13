@@ -53,5 +53,8 @@ ServiceSchema.pre(/^find/, async function () {
   }
 });
 
+ServiceSchema.index({ provider: 1, status: 1, createdAt: -1 });
+ServiceSchema.index({ status: 1, createdAt: -1 });
+
 const Service = mongoose.model<IService>("Service", ServiceSchema);
 export default Service;
